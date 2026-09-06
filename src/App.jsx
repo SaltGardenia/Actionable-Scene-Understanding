@@ -474,13 +474,8 @@ export default function App() {
             toward latent physical-state inference, interaction-driven scene updating, persistent
             predictive scene modeling, and human-aware embodied understanding. By connecting
             scene representation with action-conditioned prediction and closed-loop behavior,
-            this survey aims to provide a systematic view of how 3D scene understanding can
-            evolve from descriptive reconstruction toward executable scene knowledge.Project
-            page:
-            <a href="https://saltgardenia.github.io/Actionable-Scene-Understanding/"
-              target="_blank" rel="noreferrer">
-              https://saltgardenia.github.io/Actionable-Scene-Understanding/
-            </a>.
+this survey aims to provide a systematic view of how 3D scene understanding can
+             evolve from descriptive reconstruction toward executable scene knowledge.
           </p>
 
           <SectionTitle id="datasets">Datasets & Evaluation Metrics</SectionTitle>
