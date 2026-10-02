@@ -28,3 +28,17 @@ scripts/.tables-build/
 
 
 paper/
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+
+# old compiled drafts of the paper (superseded by main.tex / public/main.pdf)
+From_3D_Scene_Reconstruction_to_Actionable_Scene_Understanding_for_Embodied_Manipulation__A_Survey/v14.pdf
+From_3D_Scene_Reconstruction_to_Actionable_Scene_Understanding_for_Embodied_Manipulation__A_Survey/v57.pdf
+From_3D_Scene_Reconstruction_to_Actionable_Scene_Understanding_for_Embodied_Manipulation__A_Survey/main.pdf
+paper

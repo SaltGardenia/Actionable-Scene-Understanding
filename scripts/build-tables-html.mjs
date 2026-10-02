@@ -4,11 +4,16 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const PAPER = path.join(ROOT, "paper", "main.tex");
+// resolve the paper directory: local "paper" symlink if present, else the
+// full folder name (the symlink is gitignored and absent on fresh clones)
+const PAPER_DIR = fs.existsSync(path.join(ROOT, "paper", "main.tex"))
+  ? "paper"
+  : "From_3D_Scene_Reconstruction_to_Actionable_Scene_Understanding_for_Embodied_Manipulation__A_Survey";
+const PAPER = path.join(ROOT, PAPER_DIR, "main.tex");
 const OUT = path.join(ROOT, "src", "tables-html.js");
 
 // Which section each extracted table (in document order) belongs to.
-const SECTION_OF = ["datasets", "datasets", "semantic", "physical", "embodied"];
+const SECTION_OF = ["datasets", "datasets", "datasets", "semantic", "physical", "embodied"];
 
 // ---------- low level helpers ----------
 function readBalanced(text, openIdx) {
@@ -382,6 +387,20 @@ function parseColSpec(spec) {
     if (c === "X") {
       push(null, "middle", alignSet ? align : "center");
       i++;
+      continue;
+    }
+    // \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+    if (c === "Y") {
+      push(null, "middle", "left");
+      i++;
+      continue;
+    }
+    // \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+    if (c === "L") {
+      const open = spec.indexOf("{", i);
+      const b = readBalanced(spec, open);
+      push(b.inner, "top", "left");
+      i = b.end;
       continue;
     }
     if (c === "m" || c === "p" || c === "b") {

@@ -3,33 +3,91 @@
   flex: 1;
 }
 
-/* ---------- Floating side TOC ---------- */
-.toc-side {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  left: max(0.75rem, calc((100vw - 980px) / 2 - 212px));
-  width: 196px;
-  display: none;
+/* ---------- Body layout: TOC rail + content column ---------- */
+.body-layout {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+  max-width: 1760px;
+  margin: 0 auto;
+}
+
+.toc-rail {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  padding: 2.25rem 0.75rem 1.5rem 1.25rem;
+  overflow: hidden;
+}
+
+/* rail chrome (tint + divider) fades in scroll-linked via --rail-chrome,
+   so the body never starts with a hard horizontal edge under the hero */
+.toc-rail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--hairline);
+  opacity: var(--rail-chrome, 0);
+  pointer-events: none;
+}
+
+.toc-rail__inner {
+  position: relative;
+  display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  z-index: 90;
-  padding: 0.75rem;
-  border-radius: var(--radius-md);
-  background: var(--bar);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--hairline);
-  box-shadow: var(--shadow-md);
+  gap: 2px;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+  margin: -4px;
+  scrollbar-width: thin;
+  opacity: 0;
+  transform: translateX(-10px);
+  filter: blur(3px);
+  transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out),
+    filter 0.65s var(--ease-out);
 }
 
-@media (min-width: 1440px) {
-  .toc-side {
-    display: flex;
-  }
+.toc-rail.is-entered .toc-rail__inner {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
 }
 
-.toc-side__link {
+.toc-rail__group {
+  margin: 1.15rem 0 0.3rem;
+  padding: 0 0.7rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.toc-rail__group:first-child {
+  margin-top: 0;
+}
+
+/* sliding highlight that glides between the active entries */
+.toc-rail__indicator {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 0;
+  height: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  transition: transform 0.4s var(--ease-out), height 0.4s var(--ease-out);
+  pointer-events: none;
+}
+
+.toc-rail__link {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -39,63 +97,217 @@
   text-decoration: none;
   font-size: 0.85rem;
   line-height: 1.3;
-  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
+  white-space: nowrap;
+  transition: color 0.15s var(--ease-out), transform 0.1s var(--ease-out);
 }
 
-.toc-side__link:hover {
-  background: var(--accent-soft);
+.toc-rail__link:hover {
   color: var(--accent);
 }
 
-.toc-side__link.is-active {
+.toc-rail__link:active {
+  transform: scale(0.97);
+}
+
+.toc-rail__link.is-active {
   color: var(--accent);
   font-weight: 600;
-  background: var(--accent-soft);
 }
 
 .toc__dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--fg-3);
   flex-shrink: 0;
   transition: background 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
-.toc-side__link.is-active .toc__dot {
+.toc-rail__link.is-active .toc__dot {
   background: var(--accent);
-  transform: scale(1.25);
+  transform: scale(1.3);
 }
 
-/* ---------- Reading progress ---------- */
-.progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  z-index: 99;
-  background: transparent;
-  pointer-events: none;
+.body-main {
+  min-width: 0;
+  padding: 0.5rem 3rem 4.5rem;
 }
 
-.progress__bar {
-  height: 100%;
-  width: 100%;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left center;
-  will-change: transform;
+.body-main__inner {
+  max-width: 65rem;
+  margin: 0 auto;
+}
+
+/* ---------- Article prose (extracted from the paper) ---------- */
+/* editorial measure: text shares one narrower column, media breaks out
+   slightly wider — both centered so whitespace stays symmetric */
+.prose-p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--fg);
+  max-width: 65rem;
+  margin: 0 auto 1.1rem;
+  text-align: left;
+}
+
+.prose-h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  max-width: 65rem;
+  margin: 2.4rem auto 0.9rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.prose-h4 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  max-width: 65rem;
+  margin: 1.9rem auto 0.7rem;
+  scroll-margin-top: 1.5rem;
+}
+
+.prose-h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  max-width: 65rem;
+  margin: 1.5rem auto 0.5rem;
+}
+
+.prose-p em {
+  font-style: italic;
+}
+
+/* the abstract reads like body prose */
+.abstract {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--fg);
+  max-width: 65rem;
+  margin: 0 auto 1.1rem !important;
+}
+
+/* gentle reveal as blocks enter the viewport (hero -> reading transition) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* headings and the section title share the text column's measure and
+   centered alignment; media breaks out to the wider width */
+.body-main p.section-title {
+  text-align: left !important;
+  max-width: 65rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* figures sit on a narrower measure than the text — generous side margins;
+   tables use the full text width so wide comparisons stay readable */
+.body-main .pdf-figure,
+.body-main .card {
+  max-width: 46rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.body-main .paper-table {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 1100px) {
+  .body-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .toc-rail {
+    display: none;
+  }
+  .body-main {
+    padding: 0.5rem 1.25rem 3.5rem;
+  }
 }
 
 /* ---------- Hero / header ---------- */
+.hero-section {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--hero-bg);
+}
+
+/* flowing silk waves + a translucent scrim that keeps the text readable */
+.hero-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-scrim);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .hero-scrim {
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+  }
+}
+
+.hero-fade {
+  /* above the art + scrim */
+  position: relative;
+  z-index: 1;
+  /* Bulma's .container sets flex-grow: 1, so the hero container already
+     fills the section — center its children within that full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  will-change: opacity, transform;
+}
+
 .paper-title {
   font-weight: 700 !important;
-  font-size: clamp(2rem, 4.5vw, 3.2rem) !important;
-  line-height: 1.1 !important;
-  max-width: 18em;
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem) !important;
+  line-height: 1.16 !important;
+  max-width: none;
   margin: 0 auto !important;
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* the two-line split only applies when there is room for it */
+@media (max-width: 1023px) {
+  .hero-title-br {
+    display: none;
+  }
 }
 
 .paper-venue {
@@ -187,22 +399,6 @@
   border-top: 1px solid var(--hairline);
 }
 
-.section-intro {
-  color: var(--fg-2) !important;
-  max-width: 46rem;
-  margin: 0.75rem auto 1.75rem !important;
-  line-height: 1.6;
-}
-
-/* ---------- Abstract ---------- */
-.abstract {
-  max-width: 46rem;
-  margin: 1rem auto 0 !important;
-  line-height: 1.7;
-  color: var(--fg);
-  text-align: left;
-}
-
 /* ---------- Comparison tables ---------- */
 .paper-table {
   max-width: var(--content-w);
@@ -216,7 +412,7 @@
 
 .paper-table__head {
   background: var(--card-2);
-  padding: 10px 16px;
+  padding: 8px 14px;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--fg);
@@ -234,8 +430,8 @@
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.8rem;
-  line-height: 1.55;
+  font-size: 0.78rem;
+  line-height: 1.45;
   color: var(--fg);
 }
 
@@ -247,7 +443,7 @@
 .paper-table thead th {
   background: var(--accent);
   color: #fff;
-  padding: 10px 12px;
+  padding: 8px 10px;
   font-weight: 700;
   letter-spacing: 0.01em;
   vertical-align: middle;
@@ -276,9 +472,9 @@
 
 /* body cells */
 .paper-table tbody td {
-  padding: 8px 11px;
-  font-size: 0.78rem;
-  line-height: 1.5;
+  padding: 6px 10px;
+  font-size: 0.76rem;
+  line-height: 1.45;
   background: var(--card);
   border-bottom: 1px solid var(--hairline);
   vertical-align: middle;
@@ -355,7 +551,7 @@
 }
 
 .paper-table__caption {
-  padding: 10px 16px 14px;
+  padding: 9px 14px 12px;
   font-size: 0.85rem;
   line-height: 1.6;
   color: var(--fg-2);
@@ -426,32 +622,32 @@
 
 /* readable widths for the text-heavy columns */
 #tbl-1 tbody td:nth-child(1),
-#tbl-1 thead td:nth-child(1) { min-width: 118px; } /* Dataset */
+#tbl-1 thead td:nth-child(1) { min-width: 104px; } /* Dataset */
 #tbl-1 tbody td:nth-child(2),
-#tbl-1 thead td:nth-child(2) { min-width: 66px; } /* Year */
+#tbl-1 thead td:nth-child(2) { min-width: 62px; } /* Venue */
 #tbl-1 tbody td:nth-child(3),
-#tbl-1 thead td:nth-child(3) { min-width: 94px; } /* Scene Type */
+#tbl-1 thead td:nth-child(3) { min-width: 78px; } /* Scene Type */
 #tbl-1 tbody td:nth-child(13),
-#tbl-1 thead td:nth-child(13) { min-width: 140px; max-width: 184px; } /* Scene capability */
+#tbl-1 thead td:nth-child(13) { min-width: 126px; max-width: 160px; } /* Scene capability */
 #tbl-1 tbody td:nth-child(14),
-#tbl-1 thead td:nth-child(14) { min-width: 152px; max-width: 216px; } /* GT Method */
+#tbl-1 thead td:nth-child(14) { min-width: 138px; max-width: 188px; } /* GT Method */
 #tbl-1 tbody td:nth-child(15),
-#tbl-1 thead td:nth-child(15) { min-width: 244px; max-width: 348px; } /* Description */
+#tbl-1 thead td:nth-child(15) { min-width: 220px; max-width: 316px; } /* Description */
 
 /* modality symbol columns stay compact */
 #tbl-1 tbody td:nth-child(n + 4):nth-child(-n + 12),
-#tbl-1 thead td:nth-child(n + 4):nth-child(-n + 12) { min-width: 36px; }
+#tbl-1 thead td:nth-child(n + 4):nth-child(-n + 12) { min-width: 32px; }
 
 #tbl-1 thead td,
 #tbl-1 thead th {
-  font-size: 0.74rem;
-  line-height: 1.3;
-  padding: 9px 7px;
+  font-size: 0.73rem;
+  line-height: 1.28;
+  padding: 8px 6px;
   vertical-align: middle;
 }
 
 #tbl-1 tbody td {
-  padding: 8px 10px;
+  padding: 6px 9px;
   vertical-align: middle;
 }
 
