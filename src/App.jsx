@@ -528,7 +528,7 @@ export default function App() {
             <sup>1,&dagger;</sup>,{" "}
             <a href="mailto:2024218492@mail.hfut.edu.cn" target="_blank" rel="noreferrer">Siying Song</a>
             <sup>1,&dagger;</sup>,{" "}
-            Jianan Zou
+            <a href="mailto:aujazou@mail.scut.edu.cn" target="_blank" rel="noreferrer">Jianan Zou</a>
             <sup>2</sup>,{" "}
             <a href="mailto:haihong@mail.hfut.edu.cn" target="_blank" rel="noreferrer">Haihong Xiao</a>
             <sup>1,*</sup>,{" "}

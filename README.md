@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[**Yaze Li**](https://saltgardenia.github.io/) <sup>1,†</sup> · [**Xinyu Xie**](mailto:2024218501@mail.hfut.edu.cn) <sup>1,†</sup> · [**Jiawei Ma**](mailto:jiawei@hfut.edu.cn) <sup>1,†</sup> · [**Siying Song**](mailto:2024218492@mail.hfut.edu.cn) <sup>1,†</sup> · **Jianan Zou** <sup>2</sup> · [**Haihong Xiao**](mailto:haihong@mail.hfut.edu.cn) <sup>1,∗</sup> · [**Wei Jia**](mailto:weijia@mail.hfut.edu.cn) <sup>1</sup>
+[**Yaze Li**](https://saltgardenia.github.io/) <sup>1,†</sup> · [**Xinyu Xie**](mailto:2024218501@mail.hfut.edu.cn) <sup>1,†</sup> · [**Jiawei Ma**](mailto:jiawei@hfut.edu.cn) <sup>1,†</sup> · [**Siying Song**](mailto:2024218492@mail.hfut.edu.cn) <sup>1,†</sup> · [**Jianan Zou**](mailto:aujazou@mail.scut.edu.cn) <sup>2</sup> · [**Haihong Xiao**](mailto:haihong@mail.hfut.edu.cn) <sup>1,∗</sup> · [**Wei Jia**](mailto:weijia@mail.hfut.edu.cn) <sup>1</sup>
 
 <sup>1</sup> *School of Computer Science and Information Engineering, Hefei University of Technology, Hefei, China*
 <sup>2</sup> *School of Automation Science and Engineering, South China University of Technology, Guangzhou, China*
