@@ -1,272 +1,285 @@
-.section {
-  padding: 3.5rem 1.5rem 5rem;
-  flex: 1;
-}
-
-/* ---------- Body layout: TOC rail + content column ---------- */
-.body-layout {
-  display: grid;
-  grid-template-columns: 264px minmax(0, 1fr);
-  align-items: start;
-  width: 100%;
-  max-width: 1760px;
-  margin: 0 auto;
-}
-
-.toc-rail {
+/* ---------- 顶部导航：位于 hero 下方，下滑后吸顶置顶 ---------- */
+.top-nav {
   position: sticky;
   top: 0;
-  height: 100svh;
-  padding: 2.25rem 0.75rem 1.5rem 1.25rem;
-  overflow: hidden;
-}
-
-/* rail chrome (tint + divider) fades in scroll-linked via --rail-chrome,
-   so the body never starts with a hard horizontal edge under the hero */
-.toc-rail::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--bg-elevated);
-  border-right: 1px solid var(--hairline);
-  opacity: var(--rail-chrome, 0);
+  z-index: 1000;
+  padding: 14px 24px;
+  /* 空隙区域不拦截点击 */
   pointer-events: none;
 }
 
-.toc-rail__inner {
+.nav-pill,
+.top-nav-inner {
+  pointer-events: auto;
+  /* 无底色填充的液态玻璃：blur(14px) + 发丝边 + 柔影 */
+  width: fit-content;
+  background: transparent;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+  border-radius: 999px;
+}
+
+.top-nav-inner {
+  pointer-events: auto;
   position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
   gap: 2px;
-  max-height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  max-width: calc(100vw - 31rem);
+  height: 48px;
+  margin: 0 auto;
   padding: 4px;
-  margin: -4px;
-  scrollbar-width: thin;
-  opacity: 0;
-  transform: translateX(-10px);
-  filter: blur(3px);
-  transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out),
-    filter 0.65s var(--ease-out);
 }
 
-.toc-rail.is-entered .toc-rail__inner {
-  opacity: 1;
-  transform: none;
-  filter: blur(0);
+.nav-actions {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
 }
 
-.toc-rail__group {
-  margin: 1.15rem 0 0.3rem;
-  padding: 0 0.7rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
-  white-space: nowrap;
-}
-
-.toc-rail__group:first-child {
-  margin-top: 0;
-}
-
-/* sliding highlight that glides between the active entries */
-.toc-rail__indicator {
+.nav-indicator {
   position: absolute;
-  left: 4px;
-  right: 4px;
+  left: 0;
   top: 0;
-  height: 0;
-  border-radius: var(--radius-sm);
-  background: var(--accent-soft);
-  transition: transform 0.4s var(--ease-out), height 0.4s var(--ease-out);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+  opacity: 0;
   pointer-events: none;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+  will-change: transform;
 }
 
-.toc-rail__link {
+.top-nav a.nav-link {
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.7rem;
-  border-radius: var(--radius-sm);
-  color: var(--fg-2);
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--fg-3);
   text-decoration: none;
-  font-size: 0.85rem;
-  line-height: 1.3;
   white-space: nowrap;
-  transition: color 0.15s var(--ease-out), transform 0.1s var(--ease-out);
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
 }
 
-.toc-rail__link:hover {
-  color: var(--accent);
+.top-nav a.nav-link:hover {
+  color: var(--fg);
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
 }
 
-.toc-rail__link:active {
-  transform: scale(0.97);
+.top-nav a.nav-link:active {
+  transform: scale(0.96);
 }
 
-.toc-rail__link.is-active {
-  color: var(--accent);
+.top-nav a.nav-link.active {
+  color: var(--fg);
   font-weight: 600;
 }
 
-.toc__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--fg-3);
-  flex-shrink: 0;
-  transition: background 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+/* 总览入口：与其他锚点胶囊区分的常驻填充样式 */
+.top-nav a.nav-all {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
-.toc-rail__link.is-active .toc__dot {
+.top-nav a.nav-all ion-icon {
+  font-size: 1rem;
+}
+
+.top-nav a.nav-all:hover {
   background: var(--accent);
-  transform: scale(1.3);
+  color: #fff;
 }
 
-.body-main {
-  min-width: 0;
-  padding: 0.5rem 3rem 4.5rem;
+.top-nav a.nav-all:active {
+  transform: scale(0.96);
 }
 
-.body-main__inner {
-  max-width: 65rem;
-  margin: 0 auto;
+.top-nav a.nav-all.is-active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* ---------- Article prose (extracted from the paper) ---------- */
-/* editorial measure: text shares one narrower column, media breaks out
-   slightly wider — both centered so whitespace stays symmetric */
-.prose-p {
-  font-size: 1rem;
-  line-height: 1.8;
+/* 操作胶囊内的搜索与主题切换 */
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 48px;
+  padding: 0 1.1rem;
+  color: var(--fg-3);
+  cursor: text;
+  background: transparent;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+  border-radius: 999px;
+  transition: border-color 0.15s ease;
+}
+
+.nav-search:focus-within {
+  border-color: var(--accent);
+}
+
+.nav-search input {
+  border: none;
+  outline: none;
+  background: transparent;
   color: var(--fg);
-  max-width: 65rem;
-  margin: 0 auto 1.1rem;
-  text-align: left;
+  font-family: inherit;
+  font-size: 0.85rem;
+  width: 11rem;
 }
 
-.prose-h3 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.3;
-  max-width: 65rem;
-  margin: 2.4rem auto 0.9rem;
-  scroll-margin-top: 1.5rem;
+.nav-search input::placeholder {
+  color: var(--fg-3);
 }
 
-.prose-h4 {
-  font-size: 1.12rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.35;
-  max-width: 65rem;
-  margin: 1.9rem auto 0.7rem;
-  scroll-margin-top: 1.5rem;
+.nav-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: var(--shadow-sm);
+  color: var(--fg-2);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
-.prose-h5 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent);
-  max-width: 65rem;
-  margin: 1.5rem auto 0.5rem;
-}
-
-.prose-p em {
-  font-style: italic;
-}
-
-/* the abstract reads like body prose */
-.abstract {
-  font-size: 1rem;
-  line-height: 1.8;
+.nav-theme-btn:hover {
+  background: color-mix(in srgb, var(--fg) 5%, transparent);
   color: var(--fg);
-  max-width: 65rem;
-  margin: 0 auto 1.1rem !important;
 }
 
-/* gentle reveal as blocks enter the viewport (hero -> reading transition) */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+.nav-theme-btn:active {
+  transform: scale(0.94);
 }
 
-[data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
-}
-
-/* headings and the section title share the text column's measure and
-   centered alignment; media breaks out to the wider width */
-.body-main p.section-title {
-  text-align: left !important;
-  max-width: 65rem;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* figures sit on a narrower measure than the text — generous side margins;
-   tables use the full text width so wide comparisons stay readable */
-.body-main .pdf-figure,
-.body-main .card {
-  max-width: 46rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.body-main .paper-table {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (max-width: 1100px) {
-  .body-layout {
-    grid-template-columns: minmax(0, 1fr);
+/* 窄屏：隐藏品牌胶囊，锚点靠左，收紧链接内边距避免溢出 */
+@media (max-width: 900px) {
+  .top-nav {
+    grid-template-columns: auto 1fr;
+    padding: 12px 16px;
   }
-  .toc-rail {
-    display: none;
+
+  .top-nav-inner {
+    justify-self: start;
   }
-  .body-main {
-    padding: 0.5rem 1.25rem 3.5rem;
+
+  .nav-actions {
+    justify-self: end;
+  }
+
+  .top-nav a.nav-link {
+    padding: 8px 10px;
+  }
+
+  .nav-search input {
+    width: 7rem;
   }
 }
-
 /* ---------- Hero / header ---------- */
 .hero-section {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
+  /* 固定上下留白，保证导航栏上下间隙对称 */
+  padding-top: 7rem;
+  padding-bottom: 7rem;
   position: relative;
   overflow: hidden;
   background: var(--hero-bg);
 }
 
-/* flowing silk waves + a translucent scrim that keeps the text readable */
-.hero-art {
+/* deepseek-style dynamic blurred gradient blobs */
+.hero-blobs {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.hero-art svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
 }
 
+.blob-a {
+  width: 34rem;
+  height: 34rem;
+  left: 4%;
+  top: -12%;
+  background: var(--blob-1);
+  animation: blob-a 48s ease-in-out infinite alternate;
+}
 
+.blob-b {
+  width: 30rem;
+  height: 30rem;
+  right: -6%;
+  top: 18%;
+  background: var(--blob-2);
+  animation: blob-b 56s ease-in-out -18s infinite alternate;
+}
+
+.blob-c {
+  width: 36rem;
+  height: 36rem;
+  left: 30%;
+  bottom: -22%;
+  background: var(--blob-3);
+  animation: blob-c 64s ease-in-out -36s infinite alternate;
+}
+
+@keyframes blob-a {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(9rem, 5rem) scale(1.18); }
+}
+
+@keyframes blob-b {
+  from { transform: translate(0, 0) scale(1.1); }
+  to { transform: translate(-8rem, 7rem) scale(0.92); }
+}
+
+@keyframes blob-c {
+  from { transform: translate(0, 0) scale(0.95); }
+  to { transform: translate(10rem, -6rem) scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none !important;
+  }
+}
 
 .hero-scrim {
   position: absolute;
@@ -281,7 +294,24 @@
   }
 }
 
-.hero-fade {
+/* melt the hero's bottom edge into the page background so the transition
+   to the references view never shows a sliver of a different color */
+.hero-fadeout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 45%;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 0%, transparent),
+    color-mix(in srgb, var(--bg) 55%, transparent) 55%,
+    var(--bg)
+  );
+  pointer-events: none;
+}
+
+.hero-panel {
   /* above the art + scrim */
   position: relative;
   z-index: 1;
@@ -290,10 +320,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  will-change: opacity, transform;
 }
 
 .paper-title {
+  color: var(--fg) !important;
   font-weight: 700 !important;
   font-size: clamp(1.9rem, 3.4vw, 2.9rem) !important;
   line-height: 1.16 !important;
@@ -387,316 +417,516 @@
 .reveal.d2 { animation-delay: 0.12s; }
 .reveal.d3 { animation-delay: 0.18s; }
 .reveal.d4 { animation-delay: 0.24s; }
-.reveal.d5 { animation-delay: 0.30s; }
 
-/* ---------- Section titles ---------- */
-.section-title {
-  font-weight: 600 !important;
-  font-size: clamp(1.5rem, 3vw, 2rem) !important;
-  letter-spacing: -0.02em;
-  margin-top: 4rem !important;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--hairline);
+/* gentle reveal as blocks enter the viewport */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
 }
 
-/* ---------- Comparison tables ---------- */
-.paper-table {
-  max-width: var(--content-w);
-  margin: 1.5rem auto 2.5rem;
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Tabbed content section (Overview / categories / References) ---------- */
+.content-section {
+  padding-top: 5.5rem;
+  padding-bottom: 4.5rem;
+  scroll-margin-top: 76px;
+}
+
+.content-container {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  /* 标签切换时内容整体重挂载，浏览器的 scroll anchoring 会把滚动位置
+     往回补偿，造成页面抽搐；禁用之，落点完全由脚本控制 */
+  overflow-anchor: none;
+}
+
+.tab-page {
+  animation: refs-in 0.4s var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-page {
+    animation: none;
+  }
+}
+
+/* topic filter chips (references page) */
+.refs-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 1.75rem;
+  border-radius: var(--radius-md);
+  background: var(--bar);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--card);
   box-shadow: var(--shadow-sm);
 }
 
-.paper-table__head {
-  background: var(--card-2);
-  padding: 8px 14px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--fg);
-  border-bottom: 1px solid var(--hairline);
-}
-
-.paper-table__body {
+.ref-search {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  align-self: stretch;
+  padding: 0 0.95rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--fg-3);
   background: var(--card);
-  overflow: auto;
-  max-height: 74vh;
+  transition: border-color 0.15s var(--ease-out);
 }
 
-.paper-table table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: var(--fg);
-}
-
-/* header: accent. Two-row headers are handled per-cell (not on <thead>) so
-   merged headers (e.g. "Modalities" colspan + its 9 sub-columns) pin correctly
-   across browsers and never break the fixed table width. Row 1 pins at top:0;
-   row 2 pins just below it via --header-h (measured in JS). */
-.paper-table thead td,
-.paper-table thead th {
-  background: var(--accent);
-  color: #fff;
-  padding: 8px 10px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  vertical-align: middle;
-  text-align: center;
-  white-space: normal;
-}
-
-.paper-table thead tr:first-child td,
-.paper-table thead tr:first-child th {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-}
-
-.paper-table thead tr:nth-child(2) td,
-.paper-table thead tr:nth-child(2) th {
-  position: sticky;
-  top: var(--header-h, 38px);
-  z-index: 3;
-}
-
-.paper-table thead tr:last-child td,
-.paper-table thead tr:last-child th {
-  box-shadow: inset 0 -2px 0 var(--accent-press);
-}
-
-/* body cells */
-.paper-table tbody td {
-  padding: 6px 10px;
-  font-size: 0.76rem;
-  line-height: 1.45;
-  background: var(--card);
-  border-bottom: 1px solid var(--hairline);
-  vertical-align: middle;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-.paper-table tbody tr:nth-child(even) td {
-  background: color-mix(in srgb, var(--fg) 4%, transparent);
-}
-
-.paper-table tbody tr:hover td {
-  background: var(--accent-soft);
-}
-
-/* sticky first column: keep dataset / label visible on wide tables */
-.paper-table thead td:first-child,
-.paper-table thead th:first-child,
-.paper-table tbody td:first-child {
-  position: sticky;
-  left: 0;
-}
-
-.paper-table thead td:first-child,
-.paper-table thead th:first-child {
-  z-index: 4;
-}
-
-.paper-table tbody td:first-child {
-  z-index: 2;
-  box-shadow: 1px 0 0 var(--hairline-2);
-}
-
-/* highlighted rows (inline green from source) harmonized to the theme */
-.paper-table tbody tr[style*="background"]:not(:has(td[colspan])) td {
-  background: var(--accent-soft) !important;
-}
-
-.paper-table tbody tr[style*="background"]:not(:has(td[colspan])):hover td {
-  background: rgba(0, 102, 204, 0.16) !important;
-}
-
-/* section group rows, e.g. "I. Geometric reconstruction" */
-.paper-table tbody tr:has(td[colspan]) td {
-  background: var(--accent-soft) !important;
+.ref-search:focus-within {
+  border-color: var(--accent);
   color: var(--accent);
-  font-weight: 700;
-  text-align: left;
-  border-bottom: 1px solid var(--hairline-2);
-  box-shadow: inset 3px 0 0 var(--accent);
 }
 
-.paper-table .pos {
-  color: #16a34a;
-  margin-right: 4px;
-  font-weight: 700;
-}
-
-.paper-table .neg {
-  color: #dc2626;
-  margin-right: 4px;
-  font-weight: 700;
-}
-
-.paper-table .cell {
-  display: inline-block;
-  line-height: 1.5;
-}
-
-.paper-table__body img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.paper-table__caption {
-  padding: 9px 14px 12px;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--fg-2);
-  border-top: 1px solid var(--hairline);
-}
-
-.paper-table__caption b {
+.ref-search input {
+  border: none;
+  outline: none;
+  background: transparent;
   color: var(--fg);
+  font-family: inherit;
+  font-size: 0.85rem;
+  width: 12rem;
 }
 
-/* symbol legend (Table 1 modality columns) */
-.paper-table__legend {
+.ref-search input::placeholder {
+  color: var(--fg-3);
+}
+
+.ref-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.1rem;
-  padding: 0 16px 14px;
-  font-size: 0.78rem;
-  color: var(--fg-2);
-  border-top: 1px solid var(--hairline);
-  padding-top: 10px;
+  align-items: center;
+  gap: 0.35rem 0.35rem;
+  flex: 1;
+  min-width: 0;
 }
 
-.paper-table__legend .legend-item {
+.ref-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg-2);
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 0.38rem 0.8rem;
+  border-radius: 980px;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out),
+    transform 0.1s var(--ease-out);
 }
 
-.paper-table__legend .legend-mark {
+.ref-chip:hover {
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+  color: var(--fg);
+}
+
+.ref-chip:active {
+  transform: scale(0.97);
+}
+
+.ref-chip.is-active {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.ref-chip__count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+.refs-header {
+  text-align: center;
+  margin-bottom: 2.25rem;
+}
+
+.refs-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.refs-title {
+  font-size: clamp(1.7rem, 3vw, 2.3rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 0.6rem !important;
+}
+
+.refs-subtitle {
+  color: var(--fg-2);
+  font-size: 0.95rem;
+  max-width: 36rem;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.refs-subtitle ion-icon {
+  vertical-align: -0.15em;
+}
+
+.ref-legend-text {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* grouped list */
+.refs-list {
+  animation: refs-in 0.4s var(--ease-out);
+}
+
+@keyframes refs-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refs-list {
+    animation: none;
+  }
+}
+
+.ref-group {
+  margin-bottom: 2.4rem;
+  scroll-margin-top: 84px;
+}
+
+.ref-group__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.55rem;
+  margin: 0 0 0.35rem !important;
+}
+
+.ref-group__count {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.ref-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.72rem 0.7rem;
+  border-radius: var(--radius-md);
+  transition: background 0.15s var(--ease-out);
+}
+
+.ref-row:hover {
+  background: color-mix(in srgb, var(--fg) 3.5%, transparent);
+}
+
+.ref-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.ref-title {
+  color: var(--fg);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: color 0.15s var(--ease-out);
+}
+
+.ref-title:hover {
+  color: var(--accent);
+}
+
+.ref-meta {
+  color: var(--fg-3);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ref-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.ref-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 0.32rem 0.72rem;
+  border-radius: 980px;
+  text-decoration: none;
+  transition: transform 0.15s var(--ease-out), background 0.15s var(--ease-out),
+    color 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
+}
+
+.ref-btn:active {
+  transform: scale(0.96);
+}
+
+.ref-btn ion-icon {
+  font-size: 0.92rem;
+}
+
+.ref-btn--pdf {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.ref-btn--pdf:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.ref-btn--code {
+  border: 1px solid var(--hairline-2);
+  color: var(--fg-2);
+  background: transparent;
+}
+
+.ref-btn--code:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ref-btn--page {
+  border: 1px solid var(--hairline-2);
+  color: var(--fg-2);
+  background: transparent;
+}
+
+.ref-btn--page:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.refs-empty {
+  text-align: center;
+  color: var(--fg-3);
+  padding: 2.5rem 0;
+}
+
+@media (max-width: 700px) {
+  .ref-row {
+    flex-wrap: wrap;
+  }
+  .ref-actions {
+    width: 100%;
+    padding-left: 0.7rem;
+  }
+  .ref-meta {
+    white-space: normal;
+  }
+}
+
+/* ---------- Citation card ---------- */
+.card {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--hairline);
+  background: var(--card);
+  overflow: hidden;
+}
+
+.card-header-title {
+  font-weight: 700;
+}
+
+.cite-card .card-header {
+  background: var(--card-2);
+  border-bottom: 1px solid var(--hairline);
+  box-shadow: none;
+}
+
+.copy-btn {
+  margin: 0.5rem 0.75rem 0.5rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--hairline-2);
+  background: var(--card);
+  color: var(--fg-2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: 980px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s var(--ease-out), border-color 0.15s var(--ease-out),
+    color 0.15s var(--ease-out);
+}
+
+.copy-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.copy-btn ion-icon {
+  font-size: 0.95rem;
+}
+
+.bibtex {
+  background: var(--card-2);
+  color: var(--fg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: var(--mono);
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--fg-3);
+  font-size: 0.85rem;
+}
+
+/* ---------- Theme toggle (fixed top-right) ---------- */
+.theme-fab {
+  position: fixed;
+  top: 1rem;
+  right: 1.4rem;
+  z-index: 110;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  background: var(--bar);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  color: var(--fg-2);
+  font-size: 1.15rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out),
+    transform 0.1s var(--ease-out);
 }
 
-.paper-table__legend .legend-mark.yes {
-  background: rgba(22, 163, 74, 0.14);
-  color: #16a34a;
+.theme-fab:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
-.paper-table__legend .legend-mark.no {
-  background: rgba(220, 38, 38, 0.12);
-  color: #dc2626;
+.theme-fab:active {
+  transform: scale(0.94);
 }
 
-/* Table 1: very wide comparison table. Auto-size the columns and let the
-   table grow past the container so text is never crushed — it scrolls
-   horizontally instead. Content columns are capped so the table stays sane. */
-#tbl-1 {
-  overflow-x: auto;
+/* ---------- Back to top ---------- */
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.75rem;
+  z-index: 90;
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hairline-2);
+  border-radius: 50%;
+  background: var(--bar);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  color: var(--fg);
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out),
+    visibility 0.22s var(--ease-out), background 0.18s var(--ease-out),
+    color 0.18s var(--ease-out), border-color 0.18s var(--ease-out);
 }
 
-#tbl-1 table {
-  table-layout: auto;
-  width: auto;
-  min-width: 100%;
-  font-size: 0.78rem;
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-#tbl-1 col {
-  width: auto !important;
+.back-to-top:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
-/* readable widths for the text-heavy columns */
-#tbl-1 tbody td:nth-child(1),
-#tbl-1 thead td:nth-child(1) { min-width: 104px; } /* Dataset */
-#tbl-1 tbody td:nth-child(2),
-#tbl-1 thead td:nth-child(2) { min-width: 62px; } /* Venue */
-#tbl-1 tbody td:nth-child(3),
-#tbl-1 thead td:nth-child(3) { min-width: 78px; } /* Scene Type */
-#tbl-1 tbody td:nth-child(13),
-#tbl-1 thead td:nth-child(13) { min-width: 126px; max-width: 160px; } /* Scene capability */
-#tbl-1 tbody td:nth-child(14),
-#tbl-1 thead td:nth-child(14) { min-width: 138px; max-width: 188px; } /* GT Method */
-#tbl-1 tbody td:nth-child(15),
-#tbl-1 thead td:nth-child(15) { min-width: 220px; max-width: 316px; } /* Description */
-
-/* modality symbol columns stay compact */
-#tbl-1 tbody td:nth-child(n + 4):nth-child(-n + 12),
-#tbl-1 thead td:nth-child(n + 4):nth-child(-n + 12) { min-width: 32px; }
-
-#tbl-1 thead td,
-#tbl-1 thead th {
-  font-size: 0.73rem;
-  line-height: 1.28;
-  padding: 8px 6px;
-  vertical-align: middle;
+.back-to-top ion-icon {
+  pointer-events: none;
 }
 
-#tbl-1 tbody td {
-  padding: 6px 9px;
-  vertical-align: middle;
+/* ---------- Anchor spacing ---------- */
+.refs-section,
+#citation {
+  scroll-margin-top: 84px;
 }
 
-/* second header row (modality sub-labels) slightly lighter than the group
-   header so the "Modalities" block reads clearly */
-#tbl-1 thead tr:nth-child(2) td {
-  background: color-mix(in srgb, var(--accent) 84%, #fff);
+@media (max-width: 768px) {
+  .paper-title {
+    font-size: 1.6rem !important;
+  }
+  .section {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+  .back-to-top {
+    right: 1rem;
+    bottom: 1.25rem;
+    width: 42px;
+    height: 42px;
+  }
 }
 
-/* Modalities subgroup (cols 4-12): thin dividers between sub-columns,
-   stronger edges so they read as one block under the "Modalities" header. */
-#tbl-1 thead tr:nth-child(2) td:nth-child(n + 4):nth-child(-n + 12),
-#tbl-1 tbody td:nth-child(n + 4):nth-child(-n + 12) {
-  box-shadow: inset 1px 0 0 var(--hairline);
-}
-
-#tbl-1 thead tr:nth-child(2) td:nth-child(n + 4):nth-child(-n + 12) {
-  box-shadow: inset 0 -2px 0 var(--accent-press),
-    inset 1px 0 0 rgba(255, 255, 255, 0.18);
-}
-
-#tbl-1 thead tr:nth-child(2) td:nth-child(4),
-#tbl-1 tbody td:nth-child(4) {
-  box-shadow: inset 2px 0 0 var(--hairline-2);
-}
-
-#tbl-1 thead tr:nth-child(2) td:nth-child(4) {
-  box-shadow: inset 0 -2px 0 var(--accent-press),
-    inset 2px 0 0 rgba(255, 255, 255, 0.35);
-}
-
-#tbl-1 thead tr:nth-child(2) td:nth-child(12),
-#tbl-1 tbody td:nth-child(12) {
-  box-shadow: inset -2px 0 0 var(--hairline-2);
-}
-
-#tbl-1 thead tr:nth-child(2) td:nth-child(12) {
-  box-shadow: inset 0 -2px 0 var(--accent-press),
-    inset -2px 0 0 rgba(255, 255, 255, 0.35);
-}
-
-/* Table 3: header cells carry inline text-align:left, so center them
-   explicitly (inline styles need !important to override). */
-#tbl-3 thead td,
-#tbl-3 thead th {
-  text-align: center !important;
-  vertical-align: middle !important;
-}
-
+/* ---------- Paper figures & tables (per-tab pages) ---------- */
 /* ---------- PDF figures ---------- */
 .pdf-figure {
   position: relative;
@@ -772,215 +1002,389 @@
   color: var(--fg);
 }
 
-/* ---------- Lightbox ---------- */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 2rem max(1.5rem, env(safe-area-inset-right)) 2rem
-    max(1.5rem, env(safe-area-inset-left));
-  background: rgba(8, 8, 10, 0.82);
-  backdrop-filter: blur(28px) saturate(160%);
-  -webkit-backdrop-filter: blur(28px) saturate(160%);
-  opacity: 0;
-  animation: lb-fade 0.25s var(--ease-out) forwards;
-}
 
-@keyframes lb-fade {
-  to {
-    opacity: 1;
-  }
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .lightbox {
-    background: rgba(8, 8, 10, 0.92);
-  }
-}
-
-.lightbox__img {
-  max-width: min(1100px, 92vw);
-  max-height: 82vh;
-  width: auto;
-  height: auto;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  background: #fff;
-  transform: scale(0.96);
-  animation: lb-pop 0.3s var(--ease-spring) forwards;
-}
-
-@keyframes lb-pop {
-  to {
-    transform: scale(1);
-  }
-}
-
-.lightbox__close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: background 0.18s var(--ease-out);
-}
-
-.lightbox__close:hover {
-  background: rgba(255, 255, 255, 0.24);
-}
-
-.lightbox__caption {
-  max-width: min(1100px, 92vw);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.9rem;
-  line-height: 1.55;
-  text-align: center;
-}
-
-/* ---------- Citation card ---------- */
-.card {
+.paper-table {
   max-width: var(--content-w);
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  margin: 1.5rem auto 2.5rem;
   border: 1px solid var(--hairline);
-  background: var(--card);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
 }
 
-.card-header-title {
+.paper-table__head {
+  background: var(--card-2);
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.paper-table__body {
+  background: var(--card);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.paper-table table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--fg);
+}
+
+/* header: accent. Two-row headers are handled per-cell (not on <thead>) so
+   merged headers (e.g. "Modalities" colspan + its 9 sub-columns) pin correctly
+   across browsers and never break the fixed table width. Row 1 pins at top:0;
+   row 2 pins just below it via --header-h (measured in JS). */
+.paper-table thead td,
+.paper-table thead th {
+  background: var(--accent);
+  color: #fff;
+  padding: 8px 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  vertical-align: middle;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.paper-table thead tr:first-child td,
+.paper-table thead tr:first-child th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.paper-table thead tr:nth-child(2) td,
+.paper-table thead tr:nth-child(2) th {
+  position: sticky;
+  top: var(--header-h, 38px);
+  z-index: 3;
+}
+
+.paper-table thead tr:last-child td,
+.paper-table thead tr:last-child th {
+  box-shadow: inset 0 -2px 0 var(--accent-press);
+}
+
+/* body cells. word-break stays normal so words like "Microsoft" or
+   "Geometry" never split mid-token; overflow-wrap only kicks in for
+   over-long tokens. */
+.paper-table tbody td {
+  padding: 5px 10px;
+  font-size: 0.76rem;
+  line-height: 1.38;
+  background: var(--card);
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.paper-table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.paper-table tbody tr:hover td {
+  background: var(--accent-soft);
+}
+
+/* sticky first column: keep dataset / label visible on wide tables */
+.paper-table thead td:first-child,
+.paper-table thead th:first-child,
+.paper-table tbody td:first-child {
+  position: sticky;
+  left: 0;
+}
+
+.paper-table thead td:first-child,
+.paper-table thead th:first-child {
+  z-index: 4;
+}
+
+.paper-table tbody td:first-child {
+  z-index: 2;
+  box-shadow: 1px 0 0 var(--hairline-2);
+}
+
+/* Category row tints from the paper's source colors. The tint mixes over the
+   current card color, so light and dark modes both read well; rows stay
+   hoverable (tints apply only off-hover). */
+.paper-table tbody tr.row-tint-green:not(:hover) td {
+  background: color-mix(in srgb, #34d399 14%, var(--card));
+}
+
+.paper-table tbody tr.row-tint-blue:not(:hover) td {
+  background: color-mix(in srgb, #60a5fa 14%, var(--card));
+}
+
+.paper-table tbody tr.row-tint-orange:not(:hover) td {
+  background: color-mix(in srgb, #fb923c 14%, var(--card));
+}
+
+.paper-table tbody tr.row-tint-purple:not(:hover) td {
+  background: color-mix(in srgb, #c084fc 14%, var(--card));
+}
+
+.paper-table tbody tr.row-tint-cyan:not(:hover) td {
+  background: color-mix(in srgb, #22d3ee 14%, var(--card));
+}
+
+/* fields linked to their reference: subtle accent, dashed underline */
+.paper-table td a.tbl-ref {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.paper-table td a.tbl-ref:hover {
+  color: var(--accent-press, var(--accent));
+  border-bottom-style: solid;
+}
+
+/* section group rows, e.g. "I. Geometric reconstruction" */
+.paper-table tbody tr:has(td[colspan]) td {
+  background: var(--accent-soft) !important;
+  color: var(--accent);
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid var(--hairline-2);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.paper-table .pos {
+  color: #16a34a;
+  margin-right: 4px;
   font-weight: 700;
 }
 
-.cite-card .card-header {
-  background: var(--card-2);
-  border-bottom: 1px solid var(--hairline);
-  box-shadow: none;
+.paper-table .neg {
+  color: #dc2626;
+  margin-right: 4px;
+  font-weight: 700;
 }
 
-.copy-btn {
-  margin: 0.5rem 0.75rem 0.5rem 0;
+/* per-line bullet items (table 4 strengths/limitations), as in the paper:
+   each line starts with its green + / red -- marker and stays on one line */
+.paper-table td .tbl-item {
+  display: block;
+  margin: 3px 0;
+  white-space: nowrap;
+}
+
+.paper-table .pos-sign {
+  color: #16a34a;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.paper-table .neg-sign {
+  color: #dc2626;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+[data-theme="dark"] .paper-table .pos,
+[data-theme="dark"] .paper-table .pos-sign {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .paper-table .neg,
+[data-theme="dark"] .paper-table .neg-sign {
+  color: #f87171;
+}
+
+.paper-table .cell {
+  display: inline-block;
+  line-height: 1.5;
+}
+
+.paper-table__body img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.paper-table__caption {
+  padding: 9px 14px 12px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--fg-2);
+  border-top: 1px solid var(--hairline);
+}
+
+.paper-table__caption b {
+  color: var(--fg);
+}
+
+/* symbol legend (Table 1 modality columns) */
+.paper-table__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  padding: 0 16px 14px;
+  font-size: 0.78rem;
+  color: var(--fg-2);
+  border-top: 1px solid var(--hairline);
+  padding-top: 10px;
+}
+
+.paper-table__legend .legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  border: 1px solid var(--hairline-2);
-  background: var(--card);
-  color: var(--fg-2);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.35rem 0.7rem;
-  border-radius: 980px;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s var(--ease-out), border-color 0.15s var(--ease-out),
-    color 0.15s var(--ease-out);
+  gap: 0.4rem;
 }
 
-.copy-btn:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.copy-btn ion-icon {
-  font-size: 0.95rem;
-}
-
-.bibtex {
-  background: var(--card-2);
-  color: var(--fg);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
-  padding: 1.1rem 1.25rem;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  overflow-x: auto;
-  white-space: pre;
-  font-family: var(--mono);
-}
-
-.footer-note {
-  color: var(--fg-3);
-  font-size: 0.85rem;
-}
-
-/* ---------- Back to top ---------- */
-.back-to-top {
-  position: fixed;
-  right: 1.5rem;
-  bottom: 1.75rem;
-  z-index: 90;
-  width: 46px;
-  height: 46px;
+.paper-table__legend .legend-mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--hairline-2);
-  border-radius: 50%;
-  background: var(--bar);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  color: var(--fg);
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out),
-    visibility 0.22s var(--ease-out), background 0.18s var(--ease-out),
-    color 0.18s var(--ease-out), border-color 0.18s var(--ease-out);
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.back-to-top.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+.paper-table__legend .legend-mark.yes {
+  background: rgba(22, 163, 74, 0.14);
+  color: #16a34a;
 }
 
-.back-to-top:hover {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+.paper-table__legend .legend-mark.no {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
 }
 
-.back-to-top ion-icon {
-  pointer-events: none;
+/* Table 1: very wide comparison table. Give its figure a wider container
+   than the 60rem content column (still capped to the viewport) so all 13
+   columns fit without horizontal scrolling and text is never crushed.
+   The negative inline margins let it escape the narrower parent. */
+.paper-table:has(#tbl-1) {
+  max-width: none;
+  width: min(calc(100vw - 3rem), 76rem);
+  margin-inline: calc((100% - min(calc(100vw - 3rem), 76rem)) / 2);
 }
 
-/* ---------- Anchor spacing ---------- */
-.anchor-section,
-.section-title,
-#citation {
-  scroll-margin-top: 1rem;
+/* Table 4: strengths/limitations items must each fit on one line, so use the
+   same wider full-bleed container as table 1 with content-based columns. */
+.paper-table:has(#tbl-4) {
+  max-width: none;
+  width: min(calc(100vw - 3rem), 76rem);
+  margin-inline: calc((100% - min(calc(100vw - 3rem), 76rem)) / 2);
 }
 
-@media (max-width: 768px) {
-  .paper-title {
-    font-size: 1.6rem !important;
-  }
-  .section {
-    padding: 2.5rem 1rem 3.5rem;
-  }
-  .back-to-top {
-    right: 1rem;
-    bottom: 1.25rem;
-    width: 42px;
-    height: 42px;
-  }
+#tbl-4 table {
+  table-layout: auto;
+  width: 100%;
+  min-width: 100%;
 }
+
+#tbl-4 col {
+  width: auto !important;
+}
+
+#tbl-1 table {
+  table-layout: auto;
+  width: 100%;
+  min-width: 100%;
+  font-size: 0.78rem;
+}
+
+#tbl-1 col {
+  width: auto !important;
+}
+
+/* readable widths for the text-heavy columns. Column order: 1 Dataset,
+   2 Venue, 3 Scene Type, 4-10 modality symbols, 11 Scene capability,
+   12 Data Source, 13 Description. Min-widths sit at each column's longest
+   unbreakable word so nothing ever splits mid-token. */
+#tbl-1 tbody td:nth-child(1),
+#tbl-1 thead td:nth-child(1) { min-width: 96px; } /* Dataset: ARKitScenes, Structured3D */
+#tbl-1 tbody td:nth-child(2),
+#tbl-1 thead td:nth-child(2) { min-width: 92px; } /* Venue: NeurIPS'22 */
+#tbl-1 tbody td:nth-child(3),
+#tbl-1 thead td:nth-child(3) { min-width: 80px; } /* Scene Type: Synthetic */
+#tbl-1 tbody td:nth-child(11),
+#tbl-1 thead td:nth-child(11) { min-width: 80px; } /* Scene capability: Semantics */
+#tbl-1 tbody td:nth-child(12),
+#tbl-1 thead td:nth-child(12) { min-width: 104px; } /* Data Source: Reconstruction */
+#tbl-1 tbody td:nth-child(13),
+#tbl-1 thead td:nth-child(13) { min-width: 140px; } /* Description */
+
+/* modality symbol columns stay compact */
+#tbl-1 tbody td:nth-child(n + 4):nth-child(-n + 10),
+#tbl-1 thead td:nth-child(n + 4):nth-child(-n + 10) { min-width: 24px; }
+
+#tbl-1 thead td,
+#tbl-1 thead th {
+  font-size: 0.68rem;
+  line-height: 1.28;
+  padding: 7px 6px;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+#tbl-1 tbody td {
+  padding: 6px 9px;
+  vertical-align: middle;
+  /* body cells may break long compound tokens ("Physical/Interactive") so
+     every column can shrink; headers keep their words intact */
+  overflow-wrap: anywhere;
+}
+
+/* second header row (modality sub-labels) slightly lighter than the group
+   header so the "Modalities" block reads clearly */
+#tbl-1 thead tr:nth-child(2) td {
+  background: color-mix(in srgb, var(--accent) 84%, #fff);
+}
+
+/* Modalities subgroup (cols 4-12): thin dividers between sub-columns,
+   stronger edges so they read as one block under the "Modalities" header. */
+#tbl-1 thead tr:nth-child(2) td:nth-child(n + 4):nth-child(-n + 12),
+#tbl-1 tbody td:nth-child(n + 4):nth-child(-n + 12) {
+  box-shadow: inset 1px 0 0 var(--hairline);
+}
+
+#tbl-1 thead tr:nth-child(2) td:nth-child(n + 4):nth-child(-n + 12) {
+  box-shadow: inset 0 -2px 0 var(--accent-press),
+    inset 1px 0 0 rgba(255, 255, 255, 0.18);
+}
+
+#tbl-1 thead tr:nth-child(2) td:nth-child(4),
+#tbl-1 tbody td:nth-child(4) {
+  box-shadow: inset 2px 0 0 var(--hairline-2);
+}
+
+#tbl-1 thead tr:nth-child(2) td:nth-child(4) {
+  box-shadow: inset 0 -2px 0 var(--accent-press),
+    inset 2px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+#tbl-1 thead tr:nth-child(2) td:nth-child(12),
+#tbl-1 tbody td:nth-child(12) {
+  box-shadow: inset -2px 0 0 var(--hairline-2);
+}
+
+#tbl-1 thead tr:nth-child(2) td:nth-child(12) {
+  box-shadow: inset 0 -2px 0 var(--accent-press),
+    inset -2px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Table 3: header cells carry inline text-align:left, so center them
+   explicitly (inline styles need !important to override). */
+#tbl-3 thead td,
+#tbl-3 thead th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+

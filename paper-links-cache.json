@@ -1,0 +1,887 @@
+{
+  "bi2026vla": {
+    "arxiv": "2507.17294",
+    "source": "arxiv-api"
+  },
+  "chen2026lifting": {
+    "arxiv": "2604.01907",
+    "source": "arxiv-api"
+  },
+  "keetha2026mapanything": {
+    "arxiv": "2509.13414",
+    "source": "arxiv-api"
+  },
+  "lee2026unified": {
+    "arxiv": "2605.24321",
+    "source": "arxiv-api"
+  },
+  "li2026magician": {
+    "arxiv": "2603.22650",
+    "source": "arxiv-api"
+  },
+  "li2026pointvla": {
+    "arxiv": "2503.07511",
+    "source": "arxiv-api"
+  },
+  "mia2026layout": {
+    "arxiv": "2512.02952",
+    "source": "arxiv-api"
+  },
+  "rich2026prism": {
+    "arxiv": "2412.05771",
+    "source": "arxiv-api"
+  },
+  "xu2026area3d": {
+    "arxiv": "2512.05131",
+    "source": "arxiv-api"
+  },
+  "yugay2026gaussian": {
+    "arxiv": "2506.06909",
+    "source": "arxiv-api"
+  },
+  "zhang2026efficiently": {
+    "arxiv": "2512.08924",
+    "source": "arxiv-api"
+  },
+  "zhang2026scenellm": {
+    "arxiv": "2412.11026",
+    "source": "arxiv-api"
+  },
+  "zhang2026vtla": {
+    "doi": "10.1016/j.birob.2026.100333",
+    "source": "bib"
+  },
+  "cao2025physx3d": {
+    "doi": "10.52202/085713-3136",
+    "source": "bib"
+  },
+  "chen2024pgsr": {
+    "arxiv": "2406.06521",
+    "source": "arxiv-api"
+  },
+  "chen2025graph2scene": {
+    "doi": "10.1109/iros60139.2025.11246595",
+    "source": "bib"
+  },
+  "chow2025physbench": {
+    "arxiv": "2501.16411",
+    "source": "arxiv-api"
+  },
+  "deng2025mne": {
+    "doi": "10.1109/cvpr52734.2025.00146",
+    "source": "crossref"
+  },
+  "hafner2023mastering": {
+    "doi": "10.1038/s41586-025-08744-2",
+    "source": "crossref"
+  },
+  "halacheva2025articulate3d": {
+    "arxiv": "2412.01398",
+    "source": "arxiv-api"
+  },
+  "Huang2025PlaneDUSt3R": {
+    "arxiv": "2502.16779",
+    "source": "arxiv-api"
+  },
+  "jin2025planargs": {
+    "doi": "10.52202/085713-1221",
+    "source": "crossref"
+  },
+  "kanayama2025tof360": {
+    "doi": "10.1109/cvprw67362.2025.00429",
+    "source": "crossref"
+  },
+  "lazarow2025cubify": {
+    "doi": "10.1109/cvpr52734.2025.02070",
+    "source": "crossref"
+  },
+  "Lee2025uLayout": {
+    "doi": "10.1109/wacv61041.2025.00815",
+    "source": "crossref"
+  },
+  "liu2025slam3r": {
+    "doi": "10.1109/cvpr52734.2025.01552",
+    "source": "crossref"
+  },
+  "murai2025mast3r": {
+    "doi": "10.1109/cvpr52734.2025.01556",
+    "source": "crossref"
+  },
+  "peng2025gaussian": {
+    "doi": "10.26599/cvm.2025.9450513",
+    "source": "crossref"
+  },
+  "ren2025fin3r": {
+    "doi": "10.52202/085713-5100",
+    "source": "crossref"
+  },
+  "tao2025maniskill3": {
+    "doi": "10.15607/rss.2025.xxi.021",
+    "source": "crossref"
+  },
+  "wang2025vggt": {
+    "doi": "10.1109/cvpr52734.2025.00499",
+    "source": "crossref"
+  },
+  "wu2025MODP": {
+    "doi": "10.1145/3721238.3730659",
+    "source": "bib"
+  },
+  "yang2025swin3d": {
+    "doi": "10.26599/cvm.2025.9450383",
+    "source": "crossref"
+  },
+  "yugay2025magic": {
+    "doi": "10.1109/cvpr52734.2025.00632",
+    "source": "crossref"
+  },
+  "zhang2025functional3d": {
+    "doi": "10.1109/cvpr52734.2025.01807",
+    "source": "crossref"
+  },
+  "zhang2025nerfprior": {
+    "doi": "10.1109/cvpr52734.2025.01057",
+    "source": "crossref"
+  },
+  "zhong2025internscenes": {
+    "doi": "10.52202/085713-1120",
+    "source": "crossref"
+  },
+  "brooks2024video": {
+    "doi": "10.1609/aaai.v40i6.42465",
+    "source": "crossref"
+  },
+  "bruce2024genie": {
+    "doi": "10.5220/0013076000003932",
+    "source": "crossref"
+  },
+  "chen2024ll3da": {
+    "doi": "10.1109/cvpr52733.2024.02496",
+    "source": "crossref"
+  },
+  "chen2024sdsgg": {
+    "doi": "10.52202/079017-4203",
+    "source": "crossref"
+  },
+  "delitzas2024scenefun3d": {
+    "doi": "10.1109/cvpr52733.2024.01377",
+    "source": "crossref"
+  },
+  "feng2024naruto": {
+    "doi": "10.1109/cvpr52733.2024.02038",
+    "source": "crossref"
+  },
+  "guedon2024sugar": {
+    "doi": "10.1109/cvpr52733.2024.00512",
+    "source": "crossref"
+  },
+  "huang20242d": {
+    "doi": "10.1145/3641519.3657428",
+    "source": "crossref"
+  },
+  "jiang2024gaussianshader": {
+    "doi": "10.1109/cvpr52733.2024.00509",
+    "source": "crossref"
+  },
+  "jiang2024openocc": {
+    "doi": "10.1109/iros58592.2024.10801860",
+    "source": "crossref"
+  },
+  "keetha2024splatam": {
+    "doi": "10.1109/cvpr52733.2024.02018",
+    "source": "crossref"
+  },
+  "khanna2024hssd": {
+    "doi": "10.1109/cvpr52733.2024.01550",
+    "source": "crossref"
+  },
+  "kim2024openvla": {
+    "doi": "10.36227/techrxiv.176800904.47969417/v1",
+    "source": "crossref"
+  },
+  "kolodiazhnyi2024oneformer3d": {
+    "doi": "10.1109/cvpr52733.2024.01979",
+    "source": "crossref"
+  },
+  "lajoie2023swarm": {
+    "doi": "10.1109/lra.2023.3333742/mm1",
+    "source": "crossref"
+  },
+  "leroy2024grounding": {
+    "doi": "10.1007/978-3-031-73220-1_5",
+    "source": "crossref"
+  },
+  "li2024dense": {
+    "doi": "10.1007/978-3-031-72967-6_23",
+    "source": "crossref"
+  },
+  "li2024vision": {
+    "doi": "10.70675/ec0311a0zb6a4z4249zb9fbz01bf51a02c7c",
+    "source": "crossref"
+  },
+  "ling2024dl3dv": {
+    "doi": "10.1109/cvpr52733.2024.02092",
+    "source": "crossref"
+  },
+  "luiten2024dynamic": {
+    "doi": "10.1109/3dv62453.2024.00044",
+    "source": "bib"
+  },
+  "lv2024sgformer": {
+    "doi": "10.1609/aaai.v38i5.28197",
+    "source": "crossref"
+  },
+  "matsuki2024gaussian": {
+    "doi": "10.1109/cvpr52733.2024.01708",
+    "source": "crossref"
+  },
+  "nasiriany2024robocasa": {
+    "doi": "10.15607/rss.2024.xx.050",
+    "source": "crossref"
+  },
+  "niedermayr2024compressed": {
+    "doi": "10.1109/cvpr52733.2024.00985",
+    "source": "crossref"
+  },
+  "raistrick2024infinigen": {
+    "doi": "10.1109/cvpr52733.2024.02058",
+    "source": "crossref"
+  },
+  "rich2024smoothness": {
+    "doi": "10.1007/978-3-031-73036-8_22",
+    "source": "crossref"
+  },
+  "Tsai2024BiLayout": {
+    "doi": "10.1109/cvpr52733.2024.02650",
+    "source": "bib"
+  },
+  "wang2024dust3r": {
+    "doi": "10.1109/cvpr52733.2024.01956",
+    "source": "crossref"
+  },
+  "wang2024embodiedscan": {
+    "doi": "10.1109/cvpr52733.2024.01868",
+    "source": "crossref"
+  },
+  "werby2024hierarchical": {
+    "doi": "10.15607/rss.2024.xx.077",
+    "source": "crossref"
+  },
+  "wu2024point": {
+    "doi": "10.1109/cvpr52733.2024.00463",
+    "source": "crossref"
+  },
+  "yang2024deformable": {
+    "doi": "10.1109/cvpr52733.2024.01922",
+    "source": "crossref"
+  },
+  "yu2024gsdf": {
+    "doi": "10.52202/079017-4115",
+    "source": "crossref"
+  },
+  "zhen20243d": {
+    "doi": "10.1609/aaai.v40i22.38896",
+    "source": "crossref"
+  },
+  "zhou2024navgpt": {
+    "doi": "10.1609/aaai.v38i7.28597",
+    "source": "crossref"
+  },
+  "zhu2024spgroup3d": {
+    "doi": "10.1609/aaai.v38i7.28616",
+    "source": "crossref"
+  },
+  "brohan2022rt": {
+    "doi": "10.15607/rss.2023.xix.025",
+    "source": "crossref"
+  },
+  "cheng2023tbfnt3d": {
+    "doi": "10.1109/lra.2023.3309133",
+    "source": "crossref"
+  },
+  "fridovich2023k": {
+    "doi": "10.1109/cvpr52729.2023.01201",
+    "source": "crossref"
+  },
+  "hong20233dllm": {
+    "doi": "10.52202/075280-0900",
+    "source": "crossref"
+  },
+  "hu2023cp": {
+    "doi": "10.52202/075280-1712",
+    "source": "crossref"
+  },
+  "javatavallabhula2023conceptfusion": {
+    "doi": "10.15607/rss.2023.xix.066",
+    "source": "crossref"
+  },
+  "kerbl20233d": {
+    "doi": "10.1145/3592433",
+    "source": "crossref"
+  },
+  "li2023pope": {
+    "doi": "10.18653/v1/2023.emnlp-main.20",
+    "source": "crossref"
+  },
+  "liu2023visual": {
+    "doi": "10.52202/075280-1516",
+    "source": "crossref"
+  },
+  "peng2023openscene": {
+    "doi": "10.1109/cvpr52729.2023.00085",
+    "source": "crossref"
+  },
+  "rukhovich2023tr3d": {
+    "doi": "10.1109/icip49359.2023.10222644",
+    "source": "crossref"
+  },
+  "schult2023mask3d": {
+    "doi": "10.1109/icra48891.2023.10160590",
+    "source": "crossref"
+  },
+  "takmaz2023openmask3d": {
+    "doi": "10.52202/075280-2989",
+    "source": "crossref"
+  },
+  "xiong2025cl": {
+    "doi": "10.1109/iccv51070.2023.00349",
+    "source": "crossref"
+  },
+  "yadav2023habitat": {
+    "doi": "10.1109/cvpr52729.2023.00477",
+    "source": "crossref"
+  },
+  "yao2023undirected": {
+    "doi": "10.2139/ssrn.4188784",
+    "source": "crossref"
+  },
+  "yeshwanth2023scannet++": {
+    "doi": "10.1109/iccv51070.2023.00008",
+    "source": "crossref"
+  },
+  "zhang2023multi3drefer": {
+    "doi": "10.1109/iccv51070.2023.01397",
+    "source": "crossref"
+  },
+  "zhu20233dvista": {
+    "doi": "10.1109/iccv51070.2023.00272",
+    "source": "crossref"
+  },
+  "azuma2022scanqa": {
+    "doi": "10.1109/cvpr52688.2022.01854",
+    "source": "crossref"
+  },
+  "cao2022monoscene": {
+    "doi": "10.1109/cvpr52688.2022.00396",
+    "source": "bib"
+  },
+  "chen2022tensorf": {
+    "doi": "10.1007/978-3-031-19824-3_20",
+    "source": "crossref"
+  },
+  "deitke2022": {
+    "doi": "10.52202/068431-0433",
+    "source": "crossref"
+  },
+  "guo2022neural": {
+    "doi": "10.1109/cvpr52688.2022.00543",
+    "source": "crossref"
+  },
+  "jiang2022lgt": {
+    "doi": "10.1109/cvpr52688.2022.00170",
+    "source": "crossref"
+  },
+  "lai2022stratified": {
+    "doi": "10.1109/cvpr52688.2022.00831",
+    "source": "crossref"
+  },
+  "muller2022instant": {
+    "doi": "10.1145/3528223.3530127",
+    "source": "crossref"
+  },
+  "munkberg2022extracting": {
+    "doi": "10.1109/cvpr52688.2022.00810",
+    "source": "crossref"
+  },
+  "pan2022activenerf": {
+    "doi": "10.1007/978-3-031-19827-4_14",
+    "source": "crossref"
+  },
+  "qian2022pointnext": {
+    "doi": "10.52202/068431-1685",
+    "source": "crossref"
+  },
+  "rukhovich2022fcaf3d": {
+    "doi": "10.1007/978-3-031-20080-9_28",
+    "source": "crossref"
+  },
+  "vu2022softgroup": {
+    "doi": "10.1109/cvpr52688.2022.00273",
+    "source": "crossref"
+  },
+  "wang2022cagroup3d": {
+    "doi": "10.52202/068431-2173",
+    "source": "crossref"
+  },
+  "yang2022vox": {
+    "doi": "10.1109/ismar55827.2022.00066",
+    "source": "crossref"
+  },
+  "zhu2022nice": {
+    "doi": "10.1109/cvpr52688.2022.01245",
+    "source": "crossref"
+  },
+  "bear2021physion": {
+    "doi": "10.1117/3.2265077.ch1",
+    "source": "crossref"
+  },
+  "campos2020orb": {
+    "doi": "10.1109/tro.2021.3075644",
+    "source": "crossref"
+  },
+  "chen2021hais": {
+    "doi": "10.1109/iccv48922.2021.01518",
+    "source": "crossref"
+  },
+  "chen2021history": {
+    "doi": "10.1109/ictai56018.2022.00149",
+    "source": "crossref"
+  },
+  "guo2020deep": {
+    "doi": "10.1007/978-981-97-9570-3_2",
+    "source": "crossref"
+  },
+  "hong2021vln": {
+    "doi": "10.1109/cvpr46437.2021.00169",
+    "source": "crossref"
+  },
+  "kim2021just": {
+    "doi": "10.1109/iccv48922.2021.00612",
+    "source": "crossref"
+  },
+  "li2020igibson": {
+    "doi": "10.1109/iros51168.2021.9636667",
+    "source": "crossref"
+  },
+  "li2021openrooms": {
+    "doi": "10.1109/cvpr46437.2021.00711",
+    "source": "crossref"
+  },
+  "mo2021where2act": {
+    "doi": "10.1109/iccv48922.2021.00674",
+    "source": "crossref"
+  },
+  "pumarola2021d": {
+    "doi": "10.1109/cvpr46437.2021.01018",
+    "source": "crossref"
+  },
+  "schmuck2021covins": {
+    "doi": "10.1109/ismar-adjunct54149.2021.00043",
+    "source": "crossref"
+  },
+  "sucar2021imap": {
+    "doi": "10.1109/iccv48922.2021.00617",
+    "source": "crossref"
+  },
+  "takikawa2021neural": {
+    "doi": "10.1109/cvpr46437.2021.01120",
+    "source": "crossref"
+  },
+  "Wang2021LED2": {
+    "doi": "10.1109/cvpr46437.2021.01276",
+    "source": "crossref"
+  },
+  "wang2021neus": {
+    "doi": "10.52202/068431-0246",
+    "source": "crossref"
+  },
+  "Wu2021": {
+    "doi": "10.1109/cvpr46437.2021.00743",
+    "source": "crossref"
+  },
+  "xu2021digging": {
+    "doi": "10.1109/iccv48922.2021.00602",
+    "source": "crossref"
+  },
+  "yuan2021instancerefer": {
+    "doi": "10.1109/iccv48922.2021.00181",
+    "source": "crossref"
+  },
+  "zhao20213dvgtransformer": {
+    "doi": "10.1109/iccv48922.2021.00292",
+    "source": "crossref"
+  },
+  "zhi2021semanticnerf": {
+    "doi": "10.1109/iccv48922.2021.01554",
+    "source": "crossref"
+  },
+  "achlioptas2020referit3d": {
+    "doi": "10.1007/978-3-030-58452-8_25",
+    "source": "crossref"
+  },
+  "chen2020scanrefer": {
+    "doi": "10.1007/978-3-030-58565-5_13",
+    "source": "crossref"
+  },
+  "hao2020towards": {
+    "doi": "10.1109/cvpr42600.2020.01315",
+    "source": "crossref"
+  },
+  "jiang2020pointgroup": {
+    "doi": "10.1109/cvpr42600.2020.00492",
+    "source": "crossref"
+  },
+  "mildenhall2021nerf": {
+    "doi": "10.1145/3503250",
+    "source": "crossref"
+  },
+  "xiang2020sapien": {
+    "doi": "10.1109/cvpr42600.2020.01111",
+    "source": "crossref"
+  },
+  "zheng2020structured3d": {
+    "doi": "10.1007/978-3-030-58545-7_30",
+    "source": "crossref"
+  },
+  "armeni20193d": {
+    "doi": "10.1109/iccv.2019.00576",
+    "source": "bib"
+  },
+  "choy20194d": {
+    "doi": "10.1109/cvpr.2019.00319",
+    "source": "crossref"
+  },
+  "kirillov2019panoptic": {
+    "doi": "10.1109/cvpr.2019.00963",
+    "source": "crossref"
+  },
+  "qi2019deep": {
+    "doi": "10.1109/iccv.2019.00937",
+    "source": "crossref"
+  },
+  "savva2019habitat": {
+    "doi": "10.1109/iccv.2019.00943",
+    "source": "crossref"
+  },
+  "Sun2019HorizonNet": {
+    "doi": "10.1109/cvpr.2019.00114",
+    "source": "bib"
+  },
+  "thomas2019kpconv": {
+    "doi": "10.1109/iccv.2019.00651",
+    "source": "crossref"
+  },
+  "wald2019rio": {
+    "doi": "10.1109/iccv.2019.00775",
+    "source": "crossref"
+  },
+  "anderson2018vision": {
+    "doi": "10.1109/cvpr.2018.00387",
+    "source": "crossref"
+  },
+  "dai2018scancomplete": {
+    "doi": "10.1109/cvpr.2018.00481",
+    "source": "crossref"
+  },
+  "do2018affordancenet": {
+    "doi": "10.1109/icra.2018.8460902",
+    "source": "crossref"
+  },
+  "mccormac2018fusionpp": {
+    "doi": "10.1109/3dv.2018.00015",
+    "source": "crossref"
+  },
+  "xia2018gibson": {
+    "doi": "10.1109/cvpr.2018.00945",
+    "source": "crossref"
+  },
+  "yao2018mvsnet": {
+    "doi": "10.1109/cvpr.2019.00567",
+    "source": "crossref"
+  },
+  "zellers2018neural": {
+    "doi": "10.1109/cvpr.2018.00611",
+    "source": "crossref"
+  },
+  "zhang2018perceptual": {
+    "doi": "10.1109/cvpr.2018.00068",
+    "source": "crossref"
+  },
+  "zou2018layoutnet": {
+    "doi": "10.1109/cvpr.2018.00219",
+    "source": "crossref"
+  },
+  "chang2017matterport3d": {
+    "doi": "10.1109/3dv.2017.00081",
+    "source": "bib"
+  },
+  "dai2017bundlefusion": {
+    "doi": "10.1145/3072959.3054739",
+    "source": "bib"
+  },
+  "dai2017scannet": {
+    "doi": "10.1109/cvpr.2017.261",
+    "source": "crossref"
+  },
+  "mccormac2017semanticfusion": {
+    "doi": "10.1109/icra.2017.7989538",
+    "source": "crossref"
+  },
+  "song2017sscnet": {
+    "doi": "10.5220/0008877700360046",
+    "source": "crossref"
+  },
+  "armeni20163d": {
+    "doi": "10.1109/cvpr.2016.170",
+    "source": "crossref"
+  },
+  "cadena2016past": {
+    "doi": "10.1109/tro.2016.2624754",
+    "source": "bib"
+  },
+  "schonberger2016structure": {
+    "doi": "10.1109/cvpr.2016.445",
+    "source": "crossref"
+  },
+  "furukawa2015multiview": {
+    "doi": "10.1561/0600000052",
+    "source": "bib"
+  },
+  "mur2015orb": {
+    "doi": "10.1109/tro.2015.2463671",
+    "source": "crossref"
+  },
+  "newcombe2015dynamicfusion": {
+    "doi": "10.1109/cvpr.2015.7298631",
+    "source": "crossref"
+  },
+  "song2015sunrgbd": {
+    "doi": "10.1109/cvpr.2015.7298655",
+    "source": "crossref"
+  },
+  "handa2014benchmark": {
+    "doi": "10.1109/icra.2014.6907054",
+    "source": "crossref"
+  },
+  "shotton2013scene": {
+    "doi": "10.1109/cvpr.2013.377",
+    "source": "crossref"
+  },
+  "silberman2012indoor": {
+    "doi": "10.1007/978-3-642-33715-4_54",
+    "source": "crossref"
+  },
+  "sturm2012benchmark": {
+    "doi": "10.1109/iros.2012.6385773",
+    "source": "crossref"
+  },
+  "bleyer2011patchmatch": {
+    "doi": "10.5244/c.25.14",
+    "source": "crossref"
+  },
+  "izadi2011kinectfusion": {
+    "doi": "10.1145/2047196.2047270",
+    "source": "crossref"
+  },
+  "furukawa2010accurate": {
+    "doi": "10.1109/tpami.2009.161",
+    "source": "bib"
+  },
+  "snavely2006photo": {
+    "doi": "10.1145/1179352.1141964",
+    "source": "crossref"
+  },
+  "wang2004image": {
+    "doi": "10.1109/tip.2003.819861",
+    "source": "bib"
+  },
+  "openx2023openx": {
+    "arxiv": "2310.08864",
+    "source": "curated"
+  },
+  "driess2023palme": {
+    "arxiv": "2303.03378",
+    "source": "curated"
+  },
+  "gu2023maniskill2": {
+    "arxiv": "2302.05435",
+    "source": "curated"
+  },
+  "li2023blip": {
+    "arxiv": "2301.12597",
+    "source": "curated"
+  },
+  "zitkovich2023rt": {
+    "arxiv": "2307.15818",
+    "source": "curated"
+  },
+  "ahn2022saycan": {
+    "arxiv": "2204.01691",
+    "source": "curated"
+  },
+  "gan2021threedworld": {
+    "arxiv": "2007.04954",
+    "source": "curated"
+  },
+  "radford2021clip": {
+    "arxiv": "2103.00020",
+    "source": "curated"
+  },
+  "szot2021habitat": {
+    "arxiv": "2106.14405",
+    "source": "curated"
+  },
+  "yi2019clevrer": {
+    "arxiv": "1910.01442",
+    "source": "curated"
+  },
+  "yang2019learning": {
+    "arxiv": "1906.01240",
+    "source": "curated"
+  },
+  "qi2017pointnet++": {
+    "arxiv": "1706.02413",
+    "source": "curated"
+  },
+  "barberteguy2026pano3d": {
+    "arxiv": "2606.14307",
+    "source": "arxiv-api"
+  },
+  "chen2026abot": {
+    "arxiv": "2607.00678",
+    "source": "arxiv-api"
+  },
+  "chen2026robodojo": {
+    "arxiv": "2607.04434",
+    "source": "arxiv-api"
+  },
+  "deshpande2026molmobot": {
+    "arxiv": "2603.16861",
+    "source": "arxiv-api"
+  },
+  "jin2026zipmap": {
+    "arxiv": "2603.04385",
+    "source": "arxiv-api"
+  },
+  "li2026scenix": {
+    "arxiv": "2608.07012",
+    "source": "arxiv-api"
+  },
+  "ou2026holo360d": {
+    "arxiv": "2604.22482",
+    "source": "arxiv-api"
+  },
+  "wang2026autonomous": {
+    "arxiv": "2606.24152",
+    "source": "arxiv-api"
+  },
+  "wei2026simple": {
+    "arxiv": "2606.08278",
+    "source": "arxiv-api"
+  },
+  "agrawal2025cosmos": {
+    "arxiv": "2501.03575",
+    "source": "arxiv-api"
+  },
+  "cao2025physxanything": {
+    "arxiv": "2511.13648",
+    "source": "arxiv-api"
+  },
+  "foss2025causalvqa": {
+    "arxiv": "2506.09943",
+    "source": "arxiv-api"
+  },
+  "li2025quantiphy": {
+    "arxiv": "2512.19526",
+    "source": "arxiv-api"
+  },
+  "lin2025depthanything3": {
+    "arxiv": "2511.10647",
+    "source": "arxiv-api"
+  },
+  "qu2025spatialvla": {
+    "arxiv": "2501.15830",
+    "source": "arxiv-api"
+  },
+  "meng2024towards": {
+    "arxiv": "2410.05363",
+    "source": "arxiv-api"
+  },
+  "team2024octo": {
+    "arxiv": "2405.12213",
+    "source": "arxiv-api"
+  },
+  "wang2024grutopia": {
+    "arxiv": "2407.10943",
+    "source": "arxiv-api"
+  },
+  "hu2023gaia": {
+    "arxiv": "2309.17080",
+    "source": "arxiv-api"
+  },
+  "ramakrishnan2021habitat": {
+    "doi": "10.1109/cvpr52729.2023.00477",
+    "source": "crossref"
+  },
+  "straub2019replica": {
+    "arxiv": "1906.05797",
+    "source": "arxiv-api"
+  },
+  "armeni2017joint": {
+    "doi": "10.1109/dicta52665.2021.9647182",
+    "source": "crossref"
+  },
+  "piedade2026revisiting": {
+    "failed": true
+  },
+  "tian2026sdgs": {
+    "failed": true
+  },
+  "wang2026think": {
+    "failed": true
+  },
+  "kang2024far": {
+    "arxiv": "2411.02385",
+    "source": "arxiv-api"
+  },
+  "team2024pi0": {
+    "arxiv": "2410.24164",
+    "source": "arxiv-api"
+  },
+  "yuan2024robopoint": {
+    "arxiv": "2406.10721",
+    "source": "arxiv-api"
+  },
+  "zhang2024rail": {
+    "arxiv": "2403.19369",
+    "source": "arxiv-api"
+  },
+  "baruch2021arkitscenes": {
+    "arxiv": "2111.08897",
+    "source": "arxiv-api"
+  },
+  "li2023behavior": {
+    "arxiv": "2403.09227",
+    "source": "arxiv-api"
+  },
+  "puig2021watch": {
+    "arxiv": "2010.09890",
+    "source": "arxiv-api"
+  },
+  "roh2021languagerefer": {
+    "arxiv": "2107.03438",
+    "source": "arxiv-api"
+  },
+  "ha2018world": {
+    "arxiv": "1803.10122",
+    "source": "arxiv-api"
+  },
+  "kolve2017ai2": {
+    "arxiv": "1712.05474",
+    "source": "arxiv-api"
+  },
+  "bi2020neural": {
+    "arxiv": "2008.03824",
+    "source": "arxiv-api"
+  }
+}

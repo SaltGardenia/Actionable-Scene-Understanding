@@ -1,22 +1,11 @@
 import "./App.css";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { CATEGORIES, REFS } from "./refs";
+import { FIG_DIMS } from "./fig-dimensions";
 import { TABLES_HTML } from "./tables-html";
-import { CONTENT } from "./content";
-
-const SECTIONS = [
-  { id: "overview", label: "Overview" },
-  { id: "abstract", label: "Abstract" },
-  { id: "datasets", label: "Datasets & Evaluation", group: "Part I · Foundations" },
-  { id: "geometric", label: "Geometric Reconstruction", group: "Part II · Scene Understanding" },
-  { id: "semantic", label: "Semantic Understanding", group: "Part II · Scene Understanding" },
-  { id: "physical", label: "Physical & Functional", group: "Part II · Scene Understanding" },
-  { id: "executable", label: "Executable Manipulation", group: "Part III · Embodiment" },
-  { id: "future", label: "Conclusion & Future", group: "Closing" },
-  { id: "citation", label: "Citation", group: "Closing" },
-];
+import { linkifyTableHtml } from "./table-links";
 
 const BASE = import.meta.env.BASE_URL;
-const PAPER_PDF = `${BASE}main.pdf`;
 const ARXIV_URL = "https://arxiv.org/abs/0000.00000";
 const CODE_URL = "https://github.com/SaltGardenia/Actionable-Scene-Understanding";
 
@@ -27,42 +16,24 @@ const BIBTEX = `@article{li2026actionable,
   year={2026}
 }`;
 
-function fig(name) {
-  return `${BASE}figures/${name}.png`;
-}
+// tabs: overview -> five capability-layer figure/table pages -> references
+const TABS = [
+  { id: "overview", label: "Overview" },
+  ...CATEGORIES.map((c) => ({ id: c.id, label: c.label.split(" ")[0] })),
+  { id: "references", label: "References" },
+];
+
+const fig = (name) => `${BASE}figures/${name}.png`;
 
 function scrollToSection(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const targetTop = () =>
-    el.getBoundingClientRect().top + window.scrollY - 12;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    window.scrollTo(0, targetTop());
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) {
+    el.scrollIntoView({ block: "start" });
     return;
   }
-  const startY = window.scrollY;
-  const endY = targetTop();
-  const dist = endY - startY;
-  if (Math.abs(dist) < 2) return;
-  const duration = Math.min(900, Math.max(350, Math.abs(dist) * 0.35));
-  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-  let start;
-  let cancelled = false;
-  const cancel = () => {
-    cancelled = true;
-  };
-  // the gesture always wins: any user input hands control back immediately
-  window.addEventListener("wheel", cancel, { once: true, passive: true });
-  window.addEventListener("touchstart", cancel, { once: true, passive: true });
-  window.addEventListener("keydown", cancel, { once: true });
-  const step = (ts) => {
-    if (cancelled) return;
-    if (start === undefined) start = ts;
-    const t = Math.min(1, (ts - start) / duration);
-    window.scrollTo({ top: startY + dist * easeOut(t), behavior: "instant" });
-    if (t < 1) window.requestAnimationFrame(step);
-  };
-  window.requestAnimationFrame(step);
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function CopyButton({ text }) {
@@ -89,306 +60,78 @@ function CopyButton({ text }) {
   );
 }
 
-// flowing "silk" waves behind the hero — pure SVG, theme-adaptive via CSS vars
-// one-point-perspective wireframe scene + point cloud — a nod to the survey's
-// subject (3D scene reconstruction -> embodied manipulation), pure SVG
-function HeroArt() {
-  // [x, y, r, opacity] -- scene points, denser toward the floor
-  const dots = [
-    [180, 540, 3, 0.5], [320, 610, 4, 0.7], [460, 700, 5, 0.8], [620, 760, 3, 0.6],
-    [760, 820, 5, 0.85], [900, 780, 4, 0.7], [1050, 720, 3, 0.6], [1180, 650, 4, 0.75],
-    [1320, 590, 3, 0.55], [1450, 540, 2.5, 0.45], [250, 470, 2.5, 0.4], [520, 540, 3, 0.5],
-    [700, 590, 2.5, 0.45], [860, 560, 3, 0.5], [990, 610, 3, 0.6], [1240, 760, 4, 0.7],
-    [1380, 810, 3, 0.6], [1520, 700, 3, 0.5], [90, 760, 4, 0.65], [390, 830, 5, 0.8],
-    [560, 860, 4, 0.7], [1100, 850, 5, 0.8], [1420, 860, 4, 0.7], [640, 500, 2, 0.35],
-    [740, 470, 2, 0.3], [930, 480, 2, 0.35], [1060, 520, 2.5, 0.4], [200, 380, 2, 0.3],
-    [1400, 420, 2, 0.3], [820, 430, 1.8, 0.25], [300, 560, 2.5, 0.45], [1150, 560, 2.5, 0.45],
-    [480, 800, 3, 0.6], [960, 870, 3, 0.6], [1280, 470, 2, 0.3], [100, 600, 2.5, 0.4],
-    [1500, 620, 2.5, 0.4], [700, 880, 3, 0.55], [60, 480, 2, 0.3], [1560, 500, 2, 0.3],
-  ];
-  // accent (semantic / action) points
-  const accents = [
-    [420, 640, 4, 0.9], [880, 700, 5, 0.9], [1180, 780, 4, 0.85], [260, 720, 3, 0.8],
-    [1300, 660, 3, 0.8], [760, 540, 3, 0.7], [1020, 640, 3, 0.7], [540, 470, 2.5, 0.6],
-    [940, 430, 2.5, 0.5], [660, 860, 4, 0.85],
-  ];
-  // floor grid: converging rays + depth-scaled horizontals toward VP (800, 320)
-  const rays = [
-    [-500, 0.25], [-250, 0.32], [0, 0.4], [250, 0.47], [500, 0.55], [750, 0.6],
-    [850, 0.6], [1100, 0.55], [1350, 0.47], [1600, 0.4], [1850, 0.32], [2100, 0.25],
-  ];
-  const horizontals = [
-    [880, 0.966, 0.65], [820, 0.862, 0.58], [765, 0.767, 0.52], [715, 0.681, 0.47],
-    [670, 0.603, 0.42], [630, 0.534, 0.37], [595, 0.474, 0.32], [565, 0.422, 0.27],
-    [540, 0.379, 0.23], [520, 0.345, 0.19], [505, 0.319, 0.16], [492, 0.297, 0.14],
-    [480, 0.276, 0.12], [470, 0.259, 0.11],
-  ];
-  const ceilings = [
-    [20, 0.14, 0.517], [90, 0.19, 0.397], [150, 0.24, 0.293], [200, 0.29, 0.207],
-    [240, 0.34, 0.138], [272, 0.39, 0.083], [296, 0.44, 0.041],
-  ];
-  const VP = 800;
-  const HY = 320;
-  const W = 1300;
+function Blobs() {
   return (
-    <div className="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <filter id="scene-soft" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="1.2" />
-          </filter>
-        </defs>
-        <g stroke="var(--scene-line)" strokeWidth="1.8" fill="none" strokeLinecap="round">
-          {rays.map(([x, o], i) => (
-            <line key={"r" + i} x1={x} y1={900} x2={VP} y2={HY} opacity={o} />
-          ))}
-          {horizontals.map(([y, s, o], i) => (
-            <line key={"h" + i} x1={VP - W * s} y1={y} x2={VP + W * s} y2={y} opacity={o} />
-          ))}
-          {ceilings.map(([y, o, s], i) => (
-            <line key={"c" + i} x1={VP - W * s} y1={y} x2={VP + W * s} y2={y} opacity={o} />
-          ))}
-          {/* two wireframe volumes resting on the floor */}
-          <g opacity={0.7}>
-            <path d="M 430 600 L 560 600 L 560 720 L 430 720 Z" />
-            <path d="M 470 555 L 600 555 L 600 675 L 470 675 Z" />
-            <path d="M 430 600 L 470 555 M 560 600 L 600 555 M 560 720 L 600 675 M 430 720 L 470 675" />
-          </g>
-          <g opacity={0.65}>
-            <path d="M 1050 640 L 1140 640 L 1140 730 L 1050 730 Z" />
-            <path d="M 1078 610 L 1168 610 L 1168 700 L 1078 700 Z" />
-            <path d="M 1050 640 L 1078 610 M 1140 640 L 1168 610 M 1140 730 L 1168 700 M 1050 730 L 1078 700" />
-          </g>
-        </g>
-        <g fill="var(--scene-dot)">
-          {dots.map(([x, y, r, o], i) => (
-            <circle key={"d" + i} cx={x} cy={y} r={r} opacity={o} />
-          ))}
-        </g>
-        <g fill="var(--accent)">
-          {accents.map(([x, y, r, o], i) => (
-            <circle key={"a" + i} cx={x} cy={y} r={r} opacity={o} filter="url(#scene-soft)" />
-          ))}
-        </g>
-      </svg>
+    <div className="hero-blobs" aria-hidden="true">
+      <span className="blob blob-a" />
+      <span className="blob blob-b" />
+      <span className="blob blob-c" />
     </div>
   );
 }
 
-function SideToc({ sections, activeId, entered }) {
-  const listRef = useRef(null);
-  const [indicator, setIndicator] = useState({ y: 0, h: 0 });
+function Navbar({ tab, onTabClick, query, onQuery, theme, onThemeToggle }) {
+  const navRef = useRef(null);
+  const indicatorRef = useRef(null);
 
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    const active = list.querySelector(`[data-id="${activeId}"]`);
-    if (active) setIndicator({ y: active.offsetTop, h: active.offsetHeight });
-  }, [activeId]);
-
-  return (
-    <aside
-      className={`toc-rail${entered ? " is-entered" : ""}`}
-      aria-label="Table of contents"
-      aria-hidden={!entered}
-    >
-      <div className="toc-rail__inner" ref={listRef}>
-        <span
-          className="toc-rail__indicator"
-          style={{
-            transform: `translateY(${indicator.y}px)`,
-            height: `${indicator.h}px`,
-          }}
-          aria-hidden="true"
-        />
-        {sections.map((s, i) => (
-          <Fragment key={s.id}>
-            {s.group && sections[i - 1]?.group !== s.group && (
-              <p className="toc-rail__group">{s.group}</p>
-            )}
-            <a
-              href={`#${s.id}`}
-              data-id={s.id}
-              className={`toc-rail__link${activeId === s.id ? " is-active" : ""}`}
-              tabIndex={entered ? 0 : -1}
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection(s.id);
-              }}
-            >
-              <span className="toc__dot" />
-              {s.label}
-            </a>
-          </Fragment>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-function Lightbox({ src, caption, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    const onScroll = () => onClose();
-    document.addEventListener("keydown", onKey);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      className="lightbox"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Figure preview"
-      onClick={onClose}
-    >
-      <button
-        type="button"
-        className="lightbox__close"
-        aria-label="Close"
-        onClick={onClose}
-      >
-        <ion-icon name="close-outline"></ion-icon>
-      </button>
-      <img
-        className="lightbox__img"
-        src={src}
-        alt={typeof caption === "string" ? caption : "figure"}
-        onClick={(e) => e.stopPropagation()}
-      />
-      {caption && <figcaption className="lightbox__caption">{caption}</figcaption>}
-    </div>
-  );
-}
-
-function PdfFigure({ src, caption, onOpen }) {
-  const clickable = !!onOpen;
-  const open = () => onOpen && onOpen(src, caption);
-  return (
-    <figure
-      data-reveal
-      className={`pdf-figure${clickable ? " is-clickable" : ""}`}
-      onClick={clickable ? open : undefined}
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                open();
-              }
-            }
-          : undefined
-      }
-    >
-      <div className="pdf-frame">
-        <img src={src} alt={caption || "figure"} loading="lazy" />
-        {clickable && (
-          <span className="pdf-figure__zoom" aria-hidden="true">
-            <ion-icon name="expand-outline"></ion-icon>
-          </span>
-        )}
-      </div>
-      {caption && (
-        <figcaption className="pdf-figure__caption content is-size-6 has-text-left">
-          {caption}
-        </figcaption>
-      )}
-    </figure>
-  );
-}
-
-function HtmlTable({ table }) {
-  return (
-    <figure data-reveal className="paper-table">
-      <div className="paper-table__head">Table {table.index}</div>
-      <div
-        className="paper-table__body"
-        id={`tbl-${table.index}`}
-        dangerouslySetInnerHTML={{ __html: table.html }}
-      />
-      {table.caption && (
-        <figcaption
-          className="paper-table__caption content is-size-6 has-text-left"
-          dangerouslySetInnerHTML={{ __html: table.caption }}
-        />
-      )}
-      {table.index === 1 && (
-        <div className="paper-table__legend content is-size-7 has-text-left">
-          <span className="legend-item">
-            <span className="legend-mark yes">✓</span> Supported
-          </span>
-          <span className="legend-item">
-            <span className="legend-mark no">✗</span> Not supported
-          </span>
-        </div>
-      )}
-    </figure>
-  );
-}
-
-// single extracted table by its number
-function Table({ n }) {
-  return TABLES_HTML.filter((t) => t.index === n).map((t) => (
-    <HtmlTable key={t.index} table={t} />
-  ));
-}
-
-function SectionTitle({ id, children }) {
-  return (
-    <p
-      id={id}
-      data-reveal
-      className="title is-3 mt-6 section-title"
-    >
-      {children}
-    </p>
-  );
-}
-
-function ProseBlock({ block }) {
-  if (block.kind === "p") {
-    return (
-      <p
-        data-reveal
-        className="prose-p"
-        dangerouslySetInnerHTML={{ __html: block.html }}
-      />
-    );
+  function updateIndicator() {
+    const nav = navRef.current;
+    const indicator = indicatorRef.current;
+    if (!nav || !indicator) return;
+    const active = nav.querySelector("a.active");
+    if (!active) {
+      indicator.style.opacity = "0";
+      return;
+    }
+    indicator.style.width = active.offsetWidth + "px";
+    indicator.style.height = active.offsetHeight + "px";
+    indicator.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop}px)`;
+    indicator.style.opacity = "1";
   }
-  const Tag = block.kind;
+
+  useEffect(() => {
+    updateIndicator();
+    const onResize = () => updateIndicator();
+    window.addEventListener("resize", onResize);
+    const raf = requestAnimationFrame(updateIndicator);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, [tab]);
+
   return (
-    <Tag data-reveal className={`prose-${block.kind}`}>
-      {block.text}
-    </Tag>
+    <header className="top-nav" aria-label="Main navigation">
+      <nav ref={navRef} className="top-nav-inner nav-pill">
+        <span ref={indicatorRef} className="nav-indicator" aria-hidden="true" />
+        {TABS.map((t) => (
+          <a
+            key={t.id}
+            href={"#tab-" + t.id}
+            className={`nav-link${tab === t.id ? " active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              onTabClick(t.id);
+            }}
+          >
+            {t.label}
+          </a>
+        ))}
+      </nav>
+    </header>
   );
 }
 
-// renders the extracted prose of a section with media interleaved at
-// positions in the flow: media = [{ after: <block index>, node: <jsx> }]
-function SectionBody({ id, media = [] }) {
-  const blocks = CONTENT[id]?.blocks ?? [];
-  const at = {};
-  media.forEach((m, j) => {
-    const idx = Math.min(Math.max(m.after, 0), blocks.length - 1);
-    (at[idx] = at[idx] || []).push(<Fragment key={"m" + j}>{m.node}</Fragment>);
-  });
+function ThemeFab({ theme, onToggle }) {
   return (
-    <>
-      {blocks.map((b, i) => (
-        <Fragment key={i}>
-          <ProseBlock block={b} />
-          {at[i]}
-        </Fragment>
-      ))}
-    </>
+    <button
+      type="button"
+      className="theme-fab"
+      onClick={onToggle}
+      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      <ion-icon name={theme === "dark" ? "sunny-outline" : "moon-outline"}></ion-icon>
+    </button>
   );
 }
 
@@ -412,105 +155,182 @@ function BackToTop() {
   );
 }
 
+function PdfFigure({ src, caption }) {
+  const file = src.split("/").pop();
+  const dim = FIG_DIMS[file];
+  return (
+    <figure className="pdf-figure">
+      <div className="pdf-frame">
+        <img
+          src={src}
+          alt={typeof caption === "string" ? caption : "figure"}
+          width={dim?.w}
+          height={dim?.h}
+          loading="lazy"
+        />
+      </div>
+      {caption && (
+        <figcaption className="pdf-figure__caption">{caption}</figcaption>
+      )}
+    </figure>
+  );
+}
+
+function HtmlTable({ table }) {
+  return (
+    <figure className="paper-table">
+      <div className="paper-table__head">Table {table.index}</div>
+      <div
+        className="paper-table__body"
+        id={`tbl-${table.index}`}
+        dangerouslySetInnerHTML={{ __html: linkifyTableHtml(table.html, table.index) }}
+      />
+      {table.caption && (
+        <figcaption
+          className="paper-table__caption"
+          dangerouslySetInnerHTML={{ __html: table.caption }}
+        />
+      )}
+      {table.index === 1 && (
+        <div className="paper-table__legend content is-size-7 has-text-left">
+          <span className="legend-item">
+            <span className="legend-mark yes">✓</span> Supported
+          </span>
+          <span className="legend-item">
+            <span className="legend-mark no">✗</span> Not supported
+          </span>
+        </div>
+      )}
+    </figure>
+  );
+}
+
+function Table({ n }) {
+  return TABLES_HTML.filter((t) => t.index === n).map((t) => (
+    <HtmlTable key={t.index} table={t} />
+  ));
+}
+
+function CiteCard() {
+  return (
+    <div className="card mt-6 cite-card" id="citation">
+      <header className="card-header">
+        <p className="card-header-title">Citation</p>
+        <CopyButton text={BIBTEX} />
+      </header>
+      <div className="card-content has-text-left">
+        <pre className="bibtex">
+          <code>{BIBTEX}</code>
+        </pre>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
-  const [activeId, setActiveId] = useState(SECTIONS[0].id);
-  const [lightbox, setLightbox] = useState(null);
-  const [tocEntered, setTocEntered] = useState(false);
-  const bodyRef = useRef(null);
-  const heroRef = useRef(null);
-
-  // gentle reveal-on-scroll for article blocks (the hero -> reading transition)
-  useEffect(() => {
-    const els = document.querySelectorAll("[data-reveal]");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-revealed");
-            io.unobserve(e.target);
-          }
-        }
-      },
-      { rootMargin: "0px 0px -6% 0px", threshold: 0.04 }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
+  const [tab, setTab] = useState("overview");
+  const [refCat, setRefCat] = useState("all");
+  const [query, setQuery] = useState("");
+  const [theme, setTheme] = useState(() => {
+    const stored = localStorage.getItem("theme");
+    if (stored === "dark" || stored === "light") return stored;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
 
   useEffect(() => {
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const threshold = window.innerHeight * 0.3;
-      const bodyEl = bodyRef.current;
-      if (bodyEl) {
-        const top = bodyEl.getBoundingClientRect().top;
-        setTocEntered(top <= 80);
-        // rail chrome follows the scroll 1:1: the tint and divider of the
-        // reading layout emerge vertically while the body scrolls into view
-        const vh = window.innerHeight;
-        const p = Math.min(1, Math.max(0, (vh * 0.25 - top) / (vh * 0.25)));
-        document.documentElement.style.setProperty("--rail-chrome", p.toFixed(3));
-      }
-      // scroll-linked hero fade: tracks the scroll position 1:1, fully
-      // reversible, and hands control back to the user at any instant
-      const heroEl = heroRef.current;
-      if (heroEl) {
-        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const y = window.scrollY;
-        const range = window.innerHeight * 0.55;
-        const p = Math.min(1, Math.max(0, y / range));
-        if (reduce) {
-          heroEl.style.opacity = p >= 1 ? "0" : "1";
-          heroEl.style.transform = "none";
-        } else {
-          heroEl.style.opacity = String(1 - p);
-          heroEl.style.transform = `translateY(${y * -0.08}px) scale(${1 - p * 0.05})`;
-        }
-        heroEl.style.pointerEvents = p >= 1 ? "none" : "";
-      }
-      const scrolledToBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 2;
-      let current = SECTIONS[0].id;
-      if (scrolledToBottom) {
-        current = SECTIONS[SECTIONS.length - 1].id;
-      } else {
-        for (const s of SECTIONS) {
-          const el = document.getElementById(s.id);
-          if (el && el.getBoundingClientRect().top - threshold <= 0) {
-            current = s.id;
-          } else {
-            break;
-          }
-        }
-      }
-      setActiveId(current);
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(update);
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
-  const openLightbox = (src, caption) => setLightbox({ src, caption });
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  const pendingScrollRef = useRef(false);
+  const pendingCiteRef = useRef(false);
+
+  const scrollToId = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const nav = document.querySelector(".top-nav");
+    const navH = nav ? nav.offsetHeight : 0;
+    const top = el.getBoundingClientRect().top + window.scrollY - navH - 12;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+  };
+
+  const scrollToContentLanding = (smooth = true) => {
+    // land exactly where the sticky nav pins to the viewport top — identical
+    // for every tab. The sticky nav's rect.top is 0 while pinned, so measure
+    // the in-flow #content section instead: its document offset never
+    // depends on scrollY.
+    const content = document.getElementById("content");
+    const nav = document.querySelector(".top-nav");
+    if (!content || !nav) return;
+    const navTop =
+      content.getBoundingClientRect().top + window.scrollY - nav.offsetHeight;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({
+      top: Math.max(0, navTop),
+      behavior: smooth && !reduce ? "smooth" : "auto",
+    });
+  };
+
+  // Commit the landing scroll inside the same layout pass as the tab swap, so
+  // the browser's clamped intermediate scroll position is never painted.
+  useLayoutEffect(() => {
+    if (pendingCiteRef.current) {
+      pendingCiteRef.current = false;
+      scrollToId("citation");
+      return;
+    }
+    if (!pendingScrollRef.current) return;
+    pendingScrollRef.current = false;
+    scrollToContentLanding();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
+
+  const handleTabClick = (id) => {
+    if (id === tab) {
+      scrollToContentLanding();
+      return;
+    }
+    pendingScrollRef.current = true;
+    setTab(id);
+  };
+
+  // The hero Cite button jumps to the citation block at the bottom of the
+  // Overview page, switching to that tab first when needed.
+  const handleCiteClick = () => {
+    if (tab === "overview") {
+      scrollToId("citation");
+      return;
+    }
+    pendingCiteRef.current = true;
+    setTab("overview");
+  };
+
+  const q = query.trim().toLowerCase();
+  const filtered = REFS.filter(
+    (r) =>
+      (refCat === "all" || r.category === refCat) &&
+      (!q || `${r.title} ${r.authors} ${r.venue} ${r.year}`.toLowerCase().includes(q))
+  );
+  const groups = CATEGORIES.map((c) => ({
+    ...c,
+    items: filtered.filter((r) => r.category === c.id),
+  })).filter((g) => g.items.length > 0);
+  const countByCat = Object.fromEntries(
+    CATEGORIES.map((c) => [c.id, REFS.filter((r) => r.category === c.id).length])
+  );
 
   return (
     <>
       <BackToTop />
-      <section className="section hero-section">
-        <HeroArt />
+      <ThemeFab theme={theme} onToggle={toggleTheme} />
+      <section className="section hero-section" id="top">
+        <Blobs />
         <div className="hero-scrim" aria-hidden="true" />
-        <div className="container has-text-centered hero-fade" ref={heroRef}>
+        <div className="hero-fadeout" aria-hidden="true" />
+        <div className="container has-text-centered hero-panel">
           <p className="title is-3 paper-title reveal">
             Actionable Scene Understanding for Indoor
             <br className="hero-title-br" />
@@ -551,7 +371,7 @@ export default function App() {
 
           <div className="is-flex is-justify-content-center is-flex-wrap-wrap link-row reveal d4">
             <span className="icon-text mx-1">
-              <a className="button is-dark" href={PAPER_PDF} target="_blank" rel="noreferrer">
+              <a className="button is-dark" href="/main.pdf" target="_blank" rel="noreferrer">
                 <span className="icon">
                   <ion-icon name="document-outline"></ion-icon>
                 </span>
@@ -575,7 +395,10 @@ export default function App() {
               </a>
             </span>
             <span className="icon-text mx-1">
-              <a className="button is-dark" href="#citation" rel="noreferrer">
+              <a className="button is-dark" href="#citation" rel="noreferrer" onClick={(e) => {
+                e.preventDefault();
+                handleCiteClick();
+              }}>
                 <span className="icon">
                   <ion-icon name="copy-outline"></ion-icon>
                 </span>
@@ -586,308 +409,255 @@ export default function App() {
         </div>
       </section>
 
-      <div className="body-layout" ref={bodyRef}>
-        <SideToc sections={SECTIONS} activeId={activeId} entered={tocEntered} />
-        <main className="body-main">
-          <div className="body-main__inner">
-            <div id="overview" className="anchor-section">
+      <Navbar tab={tab} onTabClick={handleTabClick} />
+
+      <section className="section content-section" id="content">
+        <div className="content-container" key={tab}>
+          {tab === "overview" && (
+            <div className="tab-page">
               <PdfFigure
-                label="Unified Framework"
                 src={fig("fig_framework")}
-                ratio={1.55}
                 caption={
                   <span>
                     <b>
                       A comprehensive view of actionable scene understanding for embodied manipulation.
-                      We organize existing research around a shared foundation of datasets and simulation
-                      environments and four complementary aspects of scene understanding: geometric
-                      reconstruction establishes spatial structure and answers where; semantic
-                      understanding identifies objects, attributes, and relations and answers what;
-                      functional and physical understanding characterizes object functions, affordances,
-                      and physical constraints and addresses how; and task-oriented action connects
-                      scene understanding to task-relevant navigation and manipulation, addressing where
-                      to go and what to do. Together, these aspects extend scene understanding from
-                      describing the environment to supporting task-relevant actions in embodied
-                      settings.
                     </b>{" "}
+                    We organize existing research around a shared foundation of datasets and
+                    simulation environments and four complementary aspects of scene understanding:
+                    geometric reconstruction establishes spatial structure and answers where; semantic
+                    understanding identifies objects, attributes, and relations and answers what;
+                    functional and physical understanding characterizes object functions,
+                    affordances, and physical constraints and addresses how; and task-oriented action
+                    connects scene understanding to task-relevant navigation and manipulation,
+                    addressing where to go and what to do.
                   </span>
                 }
-                onOpen={openLightbox}
+              />
+              <PdfFigure
+                src={fig("fig_future_directions")}
+                caption={
+                  `Four future directions for embodied indoor scene understanding:
+                  (a) from visible reconstruction to inference of latent environmental states;
+                  (b) from passive perception to physically grounded self-supervision;
+                  (c) from environment-centric modeling to human-state-aware scene understanding;
+                  and (d) from task-oriented execution to human-centered embodied intelligence.`
+                }
+              />
+              <CiteCard />
+            </div>
+          )}
+
+          {tab === "datasets" && (
+            <div className="tab-page">
+              <Table n={1} />
+              <Table n={2} />
+              <Table n={3} />
+            </div>
+          )}
+
+          {tab === "geometric" && (
+            <div className="tab-page">
+              <PdfFigure
+                src={fig("fig2")}
+                caption={`Taxonomy and chronological evolution of indoor scene reconstruction. Offline
+                reconstruction, feed-forward reconstruction, and online reconstruction are organized
+                as the three major paradigms, with representative methods arranged chronologically
+                within their corresponding technical families.`}
+              />
+              <PdfFigure
+                src={fig("fig3v12")}
+                caption={`Representative examples of offline, feed-forward, and online 3D reconstruction
+                paradigms.`}
               />
             </div>
+          )}
 
-            <SectionTitle id="abstract">Abstract</SectionTitle>
-            <p className="content has-text-left abstract" data-reveal>
-            Scene understanding for embodied manipulation must extend beyond describing
-            what exists in an environment to representing what can be acted upon, under
-            which physical constraints, and with what consequences. Existing surveys have
-            largely examined geometric reconstruction, semantic understanding, functional
-            reasoning, or embodied intelligence as separate research directions, leaving their
-            roles in task-oriented behavior insufficiently characterized. This survey presents
-            a unified perspective on actionable scene understanding for embodied manipulation,
-            where scene knowledge is organized according to its utility for task-conditioned
-            perception, physical reasoning, prediction, and action. We distinguish conventional
-            scene understanding, which primarily recovers geometric and semantic structure,
-            from actionable scene understanding, which additionally incorporates functional
-            affordances, physical properties and constraints, causal relations, and state
-            evolution. From this perspective, we review datasets and evaluation protocols,
-            geometric reconstruction, semantic understanding, physical and functional
-            understanding, and embodied scene modeling, while examining the gap between
-            perceptual fidelity and executable behavior. We further identify emerging directions
-            toward latent physical-state inference, interaction-driven scene updating, persistent
-            predictive scene modeling, and human-aware embodied understanding. By connecting
-            scene representation with action-conditioned prediction and closed-loop behavior,
-            this survey aims to provide a systematic view of how 3D scene understanding can
-            evolve from descriptive reconstruction toward executable scene knowledge.
-          </p>
-
-            <SectionTitle id="datasets">Datasets & Evaluation Metrics</SectionTitle>
-            <SectionBody
-              id="datasets"
-              media={[
-                { after: 0, node: <Table n={1} /> },
-                { after: 10, node: <Table n={2} /> },
-                { after: 13, node: <Table n={3} /> },
-              ]}
-            />
-
-            <SectionTitle id="geometric">Geometric Reconstruction</SectionTitle>
-            <SectionBody
-              id="geometric"
-              media={[
-                {
-                  after: 1,
-                  node: (
-                    <PdfFigure
-                      label="Taxonomy & Evolution"
-                      src={fig("fig2")}
-                      ratio={1.5}
-                      caption={
-                        `Taxonomy and chronological evolution of indoor scene reconstruction. Offline
-                        reconstruction, feed-forward reconstruction, and online reconstruction are
-                        organized as the three major paradigms, with representative methods arranged
-                        chronologically within their corresponding technical families.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-                {
-                  after: 3,
-                  node: (
-                    <PdfFigure
-                      label="Representative Results"
-                      src={fig("fig3v12")}
-                      ratio={1.5}
-                      caption={
-                        `Representative examples of offline, feed-forward, and online 3D reconstruction
-                        paradigms.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-              ]}
-            />
-
-            <SectionTitle id="semantic">Semantic Understanding</SectionTitle>
-            <SectionBody
-              id="semantic"
-              media={[
-                {
-                  after: 1,
-                  node: (
-                    <PdfFigure
-                      label="Semantic Evolution"
-                      src={fig("semantic_evo")}
-                      ratio={1.5}
-                      caption={
-                        <span>
-                          The four-layer bottom-up framework progressively transforms
-                          reconstructed 3D geometry into structured semantic
-                          representations, evolving from object-level perception and
-                          relational modeling to open-vocabulary semantic understanding
-                          and unified geometry&ndash;semantic representation. It
-                          establishes the semantic foundation for subsequent physical and
-                          functional reasoning, thereby bridging geometric scene
-                          reconstruction and actionable scene understanding for embodied
-                          manipulation.
-                        </span>
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-                { after: 7, node: <Table n={4} /> },
-              ]}
-            />
-
-            <SectionTitle id="physical">Physical & Functional Understanding</SectionTitle>
-            <SectionBody
-              id="physical"
-              media={[
-                {
-                  after: 1,
-                  node: (
-                    <PdfFigure
-                      label="Physical & Functional Taxonomy"
-                      src={fig("fig4b")}
-                      ratio={1.4}
-                      caption={
-                        `Taxonomy of physical and functional understanding. Existing studies
-                        can be broadly organized into physical property estimation,
-                        affordance reasoning, physical causal reasoning, and physical
-                        consistency verification. Physical property estimation focuses on
-                        object attributes such as material, mass, rigidity, and
-                        deformability. Affordance reasoning identifies feasible
-                        interaction regions and action modes. Physical causal reasoning
-                        predicts action-induced changes, temporal dynamics, and
-                        counterfactual outcomes. Physical consistency verification
-                        evaluates whether reconstructed or generated states satisfy
-                        physical constraints and can support executable simulation.
-                        Representative studies include PhysX-3D, Where2Act, CLEVRER and
-                        CausalVQA, and PhyGenBench. The figure is a conceptual synthesis
-                        of these research directions.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-                {
-                  after: 8,
-                  node: (
-                    <PdfFigure
-                      label="Observation to Manipulation"
-                      src={fig("fig4a")}
-                      ratio={1.4}
-                      caption={
-                        `From multimodal scene observation to physically grounded robot
-                        manipulation. Multimodal observations provide visual, geometric,
-                        and linguistic information, which is organized into object-centric
-                        representations containing geometry, semantics, and physical cues.
-                        Physical understanding estimates properties such as appearance,
-                        material, mass, and dynamics, while manipulation affordance
-                        associates these properties with feasible actions including
-                        grasping, pushing, pulling, lifting, and placing. The resulting
-                        actionable representation combines geometry, semantics, physical
-                        properties, and affordance modes for downstream robot
-                        manipulation. Representative formulations are discussed in
-                        PhysX-3D, Where2Act, RoboPoint, and PhysX-Anything. The figure is
-                        a conceptual synthesis of these research directions.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-                { after: 22, node: <Table n={5} /> },
-              ]}
-            />
-
-            <SectionTitle id="executable">Executable Embodied Manipulation</SectionTitle>
-            <SectionBody
-              id="executable"
-              media={[
-                {
-                  after: 2,
-                  node: (
-                    <PdfFigure
-                      label="Embodied Intelligence"
-                      src={fig("fig_embodied_intelligence")}
-                      ratio={1.5}
-                      caption={
-                        `Taxonomy of representative paradigms in embodied intelligence.
-                        Existing approaches span vision-language understanding,
-                        language-guided navigation, vision-language-action execution,
-                        predictive world modeling, and unified embodied intelligence,
-                        providing complementary capabilities for semantic understanding,
-                        spatial reasoning, action generation, prediction, and physical
-                        interaction.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-                { after: 12, node: <Table n={6} /> },
-                {
-                  after: 26,
-                  node: (
-                    <PdfFigure
-                      label="Unified Modeling"
-                      src={fig("embodied_unified_modeling")}
-                      ratio={1.5}
-                      caption={
-                        `Overview of representative paradigms toward unified embodied
-                        intelligence. VLMs provide visual-language understanding, VLNs
-                        enable language-guided navigation, VLAs connect multimodal
-                        observations with executable actions, and world-action models
-                        introduce predictive modeling capabilities. These paradigms
-                        progressively converge toward unified embodied foundation models
-                        that integrate perception, reasoning, prediction, and action
-                        generation in closed-loop interaction.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-              ]}
-            />
-
-            <SectionTitle id="future">Conclusion & Future Directions</SectionTitle>
-            <SectionBody
-              id="future"
-              media={[
-                {
-                  after: 5,
-                  node: (
-                    <PdfFigure
-                      label="Future Directions"
-                      src={fig("fig_future_directions")}
-                      ratio={1.3}
-                      caption={
-                        `Four future directions for embodied indoor scene understanding:
-                        (a) from visible reconstruction to inference of latent
-                        environmental states; (b) from passive perception to physically
-                        grounded self-supervision; (c) from environment-centric modeling
-                        to human-state-aware scene understanding; and (d) from
-                        task-oriented execution to human-centered embodied intelligence.
-                        Together, these directions shift indoor scene modeling toward
-                        dynamic, physically grounded, and human-centered representations
-                        that support reliable embodied behavior.`
-                      }
-                      onOpen={openLightbox}
-                    />
-                  ),
-                },
-              ]}
-            />
-
-            <div className="card mt-6 cite-card" id="citation" data-reveal>
-            <header className="card-header">
-              <p className="card-header-title">Citation</p>
-              <CopyButton text={BIBTEX} />
-            </header>
-            <div className="card-content has-text-left">
-              <pre className="bibtex">
-                <code>{BIBTEX}</code>
-              </pre>
+          {tab === "semantic" && (
+            <div className="tab-page">
+              <PdfFigure
+                src={fig("semantic_evo")}
+                caption={
+                  <span>
+                    The four-layer bottom-up framework progressively transforms
+                    reconstructed 3D geometry into structured semantic representations,
+                    evolving from object-level perception and relational modeling to
+                    open-vocabulary semantic understanding and unified geometry&ndash;semantic
+                    representation.
+                  </span>
+                }
+              />
+              <Table n={4} />
             </div>
-          </div>
+          )}
 
-          <p className="footer-note mt-6">
-            &copy; 2026 Survey Project Page &middot; Built with React & Bulma,
-            inspired by the DreamGaussian project page.
-          </p>
-          </div>
-        </main>
-      </div>
+          {tab === "physical" && (
+            <div className="tab-page">
+              <PdfFigure
+                src={fig("fig4b")}
+                caption={`Taxonomy of physical and functional understanding. Existing studies can be
+                broadly organized into physical property estimation, affordance reasoning, physical
+                causal reasoning, and physical consistency verification.`}
+              />
+              <Table n={5} />
+              <PdfFigure
+                src={fig("fig4a")}
+                caption={`From multimodal scene observation to physically grounded robot manipulation.
+                Multimodal observations provide visual, geometric, and linguistic information, which
+                is organized into object-centric representations containing geometry, semantics, and
+                physical cues.`}
+              />
+            </div>
+          )}
 
-      {lightbox && (
-        <Lightbox
-          src={lightbox.src}
-          caption={lightbox.caption}
-          onClose={() => setLightbox(null)}
-        />
-      )}
+          {tab === "embodied" && (
+            <div className="tab-page">
+              <PdfFigure
+                src={fig("fig_embodied_intelligence")}
+                caption={`Taxonomy of representative paradigms in embodied intelligence. Existing
+                approaches span vision-language understanding, language-guided navigation,
+                vision-language-action execution, predictive world modeling, and unified embodied
+                intelligence.`}
+              />
+              <Table n={6} />
+              <PdfFigure
+                src={fig("embodied_unified_modeling")}
+                caption={`Overview of representative paradigms toward unified embodied intelligence.
+                VLMs provide visual-language understanding, VLNs enable language-guided navigation,
+                VLAs connect multimodal observations with executable actions, and world-action models
+                introduce predictive modeling capabilities.`}
+              />
+            </div>
+          )}
+
+          {tab === "references" && (
+            <div className="tab-page refs-page">
+              <header className="refs-header">
+                <p className="refs-eyebrow">Curated Bibliography</p>
+                <h2 className="refs-title">References</h2>
+                <p className="refs-subtitle">
+                  {REFS.length} papers organized along the capability layers of the
+                  survey &mdash; each with a{" "}
+                  <ion-icon name="document-text-outline"></ion-icon>{" "}
+                  <span className="ref-legend-text">Paper</span> link and{" "}
+                  <ion-icon name="logo-github"></ion-icon>{" "}
+                  <span className="ref-legend-text">Code</span> /{" "}
+                  <ion-icon name="link-outline"></ion-icon>{" "}
+                  <span className="ref-legend-text">Page</span> wherever available.
+                </p>
+              </header>
+
+              <div className="refs-toolbar">
+                <div className="ref-chips" role="tablist" aria-label="Filter by topic">
+                  <button
+                    type="button"
+                    className={`ref-chip${refCat === "all" ? " is-active" : ""}`}
+                    onClick={() => setRefCat("all")}
+                  >
+                    All <span className="ref-chip__count">{REFS.length}</span>
+                  </button>
+                  {CATEGORIES.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      className={`ref-chip${refCat === c.id ? " is-active" : ""}`}
+                      onClick={() => setRefCat(c.id)}
+                    >
+                      {c.label}{" "}
+                      <span className="ref-chip__count">{countByCat[c.id]}</span>
+                    </button>
+                  ))}
+                </div>
+                <label className="ref-search" aria-label="Search references">
+                  <ion-icon name="search-outline"></ion-icon>
+                  <input
+                    type="search"
+                    placeholder="Search title, author, venue…"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              {groups.length === 0 ? (
+                <p className="refs-empty">No references match &ldquo;{query}&rdquo;.</p>
+              ) : (
+                <div className="refs-list" key={`${refCat}-${q}`}>
+                  {groups.map((g) => (
+                    <section key={g.id} className="ref-group" aria-label={g.label}>
+                      <h3 className="ref-group__title">
+                        {g.label}
+                        <span className="ref-group__count">{g.items.length}</span>
+                      </h3>
+                      <div className="ref-group__list">
+                        {g.items.map((r) => (
+                          <article key={r.key} className="ref-row">
+                            <div className="ref-info">
+                              <a
+                                className="ref-title"
+                                href={r.paper}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {r.title}
+                              </a>
+                              <span className="ref-meta">
+                                {r.authors} &middot; {r.venue} {r.year}
+                              </span>
+                            </div>
+                            <div className="ref-actions">
+                              {r.code && (
+                                <a
+                                  className="ref-btn ref-btn--code"
+                                  href={r.code}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  aria-label={`Open the code of ${r.title}`}
+                                >
+                                  <ion-icon name="logo-github"></ion-icon>
+                                  Code
+                                </a>
+                              )}
+                              {r.page && (
+                                <a
+                                  className="ref-btn ref-btn--page"
+                                  href={r.page}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  aria-label={`Open the project page of ${r.title}`}
+                                >
+                                  <ion-icon name="link-outline"></ion-icon>
+                                  Page
+                                </a>
+                              )}
+                              <a
+                                className="ref-btn ref-btn--pdf"
+                                href={r.paper}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={`Open the paper of ${r.title}`}
+                              >
+                                <ion-icon name="document-text-outline"></ion-icon>
+                                Paper
+                              </a>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              )}
+
+              <CiteCard />
+            </div>
+          )}
+        </div>
+      </section>
+
+      <p className="footer-note mt-6">
+        &copy; 2026 Survey Project Page &middot; Built with React & Bulma,
+        inspired by the DreamGaussian project page.
+      </p>
     </>
   );
 }
